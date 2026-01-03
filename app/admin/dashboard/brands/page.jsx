@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { AddNewBrand } from './AddNewBrand';
+import { CategorySheet } from './CategorySheet';
 
 export default function AdminBrandsPage() {
   const router = useRouter();
@@ -25,7 +26,8 @@ export default function AdminBrandsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <p className="text-gray-400">Manage all brands and categories</p>
-        <AddNewBrand/>
+        <div className="flex gap-4"><AddNewBrand/>
+        <CategorySheet /></div>
       </div>
 
       {/* Search and Filters */}
