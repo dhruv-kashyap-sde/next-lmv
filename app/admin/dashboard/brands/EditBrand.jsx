@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +9,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Upload, Link as LinkIcon, X, ImageIcon } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Upload, Link as LinkIcon, X, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
-export function AddNewBrand({ onSuccess }) {
+export function EditBrand({ brand, onSuccess, trigger }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [brandName, setBrandName] = useState("");
@@ -24,9 +24,22 @@ export function AddNewBrand({ onSuccess }) {
   const [logoFile, setLogoFile] = useState(null);
   const [logoUrl, setLogoUrl] = useState("");
   const [logoPreview, setLogoPreview] = useState("");
-  const [uploadMethod, setUploadMethod] = useState("file"); // "file" or "url"
+  const [uploadMethod, setUploadMethod] = useState("url");
+  const [isActive, setIsActive] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Initialize form with brand data when dialog opens
+  useEffect(() => {
+    if (open && brand) {
+      setBrandName(brand.name || "");
+      setWebsite(brand.website || "");
+      setLogoPreview(brand.logo || "");
+      setIsActive(brand.isActive ?? true);
+      setIsFeatured(brand.isFeatured ?? false);
+    }
+  }, [open, brand]);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -49,13 +62,11 @@ export function AddNewBrand({ onSuccess }) {
   };
 
   const handleFileSelect = (file) => {
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
-    // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size must be less than 5MB");
       return;
@@ -64,7 +75,6 @@ export function AddNewBrand({ onSuccess }) {
     setLogoFile(file);
     setUploadMethod("file");
     
-    // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setLogoPreview(reader.result);
@@ -85,6 +95,7 @@ export function AddNewBrand({ onSuccess }) {
     }
     setLogoPreview(logoUrl);
     setUploadMethod("url");
+    setLogoUrl("");
   };
 
   const handleRemoveLogo = () => {
@@ -113,37 +124,32 @@ export function AddNewBrand({ onSuccess }) {
 
     try {
       const response = await fetch("/api/admin/brands", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id: brand._id,
           name: brandName.trim(),
-          logo: logoPreview, // Using the base64 or URL
+          logo: logoPreview,
           website: website.trim() || undefined,
+          isActive,
+          isFeatured,
         }),
       });
 
       const result = await response.json();
 
       if (result.success) {
-        toast.success("Brand created successfully");
-        // Reset form
-        setBrandName("");
-        setWebsite("");
-        setLogoFile(null);
-        setLogoUrl("");
-        setLogoPreview("");
+        toast.success("Brand updated successfully");
         setOpen(false);
-        
-        // Call parent refresh function
         if (onSuccess) onSuccess();
       } else {
-        toast.error(result.error || "Failed to create brand");
+        toast.error(result.error || "Failed to update brand");
       }
     } catch (error) {
-      console.error("Failed to create brand:", error);
-      toast.error("An error occurred while creating the brand");
+      console.error("Failed to update brand:", error);
+      toast.error("An error occurred while updating the brand");
     } finally {
       setLoading(false);
     }
@@ -151,17 +157,27 @@ export function AddNewBrand({ onSuccess }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="brand">
-          <Plus className="w-4 h-4 mr-2" />
-          Add New Brand
+      {trigger ? (
+        <div onClick={() => setOpen(true)}>{trigger}</div>
+      ) : (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-primary hover:text-primary/80"
+          onClick={() => setOpen(true)}
+        >
+          <Pencil className="w-4 h-4 mr-1" />
+          Edit
         </Button>
-      </DialogTrigger>
+      )}
+      
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl text-primary font-bebas">Add New Brand</DialogTitle>
+          <DialogTitle className="text-2xl text-primary font-bebas">
+            Edit Brand
+          </DialogTitle>
           <DialogDescription>
-            Upload a brand logo and enter the brand name
+            Update brand information and logo
           </DialogDescription>
         </DialogHeader>
 
@@ -169,13 +185,10 @@ export function AddNewBrand({ onSuccess }) {
           <div className="grid gap-6 py-4">
             {/* Logo Upload Section */}
             <div className="space-y-4">
-              <Label>
-                Brand Logo <span className="text-red-500">*</span>
-              </Label>
+              <Label>Brand Logo <span className="text-red-500">*</span></Label>
 
               {!logoPreview ? (
                 <>
-                  {/* Drag & Drop Area */}
                   <div
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
@@ -207,7 +220,6 @@ export function AddNewBrand({ onSuccess }) {
                     </p>
                   </div>
 
-                  {/* Divider */}
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t border-white/10" />
@@ -217,7 +229,6 @@ export function AddNewBrand({ onSuccess }) {
                     </div>
                   </div>
 
-                  {/* Import from URL */}
                   <div className="space-y-2">
                     <Label htmlFor="logoUrl" className="text-sm">
                       Import from URL
@@ -246,7 +257,6 @@ export function AddNewBrand({ onSuccess }) {
                   </div>
                 </>
               ) : (
-                // Logo Preview
                 <div className="relative border border-white/10 rounded-lg p-4 bg-white/5">
                   <Button
                     type="button"
@@ -263,20 +273,16 @@ export function AddNewBrand({ onSuccess }) {
                         src={logoPreview}
                         alt="Logo preview"
                         className="w-full h-full object-contain"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.parentElement.innerHTML = '<div class="text-gray-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
-                        }}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium truncate">
-                        {logoFile?.name || "Logo from URL"}
+                        {logoFile?.name || "Brand Logo"}
                       </p>
                       <p className="text-sm text-gray-400">
                         {logoFile 
                           ? `${(logoFile.size / 1024).toFixed(2)} KB`
-                          : "External image"
+                          : "Current logo"
                         }
                       </p>
                     </div>
@@ -285,7 +291,7 @@ export function AddNewBrand({ onSuccess }) {
               )}
             </div>
 
-            {/* Brand Name Input */}
+            {/* Brand Name */}
             <div className="space-y-2">
               <Label htmlFor="brandName">
                 Brand Name <span className="text-red-500">*</span>
@@ -300,11 +306,9 @@ export function AddNewBrand({ onSuccess }) {
               />
             </div>
 
-            {/* Website Input */}
+            {/* Website */}
             <div className="space-y-2">
-              <Label htmlFor="website">
-                Website (Optional)
-              </Label>
+              <Label htmlFor="website">Website (Optional)</Label>
               <Input
                 id="website"
                 type="url"
@@ -314,9 +318,32 @@ export function AddNewBrand({ onSuccess }) {
                 className="focus:border-primary"
               />
             </div>
+
+            {/* Status Toggles */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Active Status</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Make this brand visible to users
+                  </p>
+                </div>
+                <Switch checked={isActive} onCheckedChange={setIsActive} />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Featured</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Show in featured brands section
+                  </p>
+                </div>
+                <Switch checked={isFeatured} onCheckedChange={setIsFeatured} />
+              </div>
+            </div>
           </div>
 
-          <DialogFooter className="gap-2 ">
+          <DialogFooter className="gap-2">
             <DialogClose asChild>
               <Button type="button" variant="outline" disabled={loading}>
                 Cancel
@@ -326,13 +353,10 @@ export function AddNewBrand({ onSuccess }) {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                <>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Brand
-                </>
+                "Update Brand"
               )}
             </Button>
           </DialogFooter>
