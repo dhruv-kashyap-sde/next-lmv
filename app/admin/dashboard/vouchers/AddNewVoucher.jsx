@@ -29,8 +29,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DynamicListInput } from "@/components/ui/dynamic-list-input";
+import { toast } from "sonner";
 
-export function AddNewVoucher() {
+export function AddNewVoucher({ onSuccess }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -56,41 +57,33 @@ export function AddNewVoucher() {
 
   const fetchCategories = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/categories');
-      // const data = await response.json();
-      // setCategories(data.categories);
-
-      // Mock data for now
-      setCategories([
-        { id: "1", name: "E-commerce" },
-        { id: "2", name: "Food Delivery" },
-        { id: "3", name: "Fashion" },
-        { id: "4", name: "Travel" },
-        { id: "5", name: "Entertainment" },
-      ]);
+      const response = await fetch('/api/admin/categories');
+      const result = await response.json();
+      
+      if (result.success) {
+        setCategories(result.data);
+      } else {
+        toast.error('Failed to fetch categories');
+      }
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      toast.error('An error occurred while fetching categories');
     }
   };
 
   const fetchBrands = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/brands');
-      // const data = await response.json();
-      // setBrands(data.brands);
-
-      // Mock data for now
-      setBrands([
-        { id: "1", name: "Amazon" },
-        { id: "2", name: "Flipkart" },
-        { id: "3", name: "Zomato" },
-        { id: "4", name: "Swiggy" },
-        { id: "5", name: "Myntra" },
-      ]);
+      const response = await fetch('/api/admin/brands');
+      const result = await response.json();
+      
+      if (result.success) {
+        setBrands(result.data);
+      } else {
+        toast.error('Failed to fetch brands');
+      }
     } catch (error) {
       console.error("Failed to fetch brands:", error);
+      toast.error('An error occurred while fetching brands');
     }
   };
 
@@ -100,32 +93,50 @@ export function AddNewVoucher() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate arrays
+    if (formData.termsAndConditions.length === 0) {
+      toast.error("Please add at least one term or condition");
+      return;
+    }
+    
+    if (formData.howToUse.length === 0) {
+      toast.error("Please add at least one step for how to use");
+      return;
+    }
+    
     setLoading(true);
 
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/vouchers', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
-
-      console.log("Voucher data:", formData);
-
-      // Reset form and close dialog
-      setFormData({
-        title: "",
-        code: "",
-        category: "",
-        brand: "",
-        minOrderAmount: "",
-        expiryDate: "",
-        termsAndConditions: [],
-        howToUse: [],
+      const response = await fetch('/api/admin/vouchers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-      setOpen(false);
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('Voucher created successfully');
+        // Reset form and close dialog
+        setFormData({
+          title: "",
+          code: "",
+          category: "",
+          brand: "",
+          minOrderAmount: "",
+          expiryDate: "",
+          termsAndConditions: [],
+          howToUse: [],
+        });
+        setOpen(false);
+        if (onSuccess) onSuccess();
+      } else {
+        toast.error(result.error || 'Failed to create voucher');
+      }
     } catch (error) {
       console.error("Failed to create voucher:", error);
+      toast.error('An error occurred while creating the voucher');
     } finally {
       setLoading(false);
     }
@@ -214,7 +225,7 @@ export function AddNewVoucher() {
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem key={category._id} value={category._id}>
                         {category.name}
                       </SelectItem>
                     ))}
@@ -235,7 +246,7 @@ export function AddNewVoucher() {
                   </SelectTrigger>
                   <SelectContent>
                     {brands.map((brand) => (
-                      <SelectItem key={brand.id} value={brand.id}>
+                      <SelectItem key={brand._id} value={brand._id}>
                         {brand.name}
                       </SelectItem>
                     ))}
