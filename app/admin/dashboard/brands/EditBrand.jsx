@@ -167,7 +167,6 @@ export function EditBrand({ brand, onSuccess, trigger }) {
           onClick={() => setOpen(true)}
         >
           <Pencil className="w-4 h-4 mr-1" />
-          Edit
         </Button>
       )}
       

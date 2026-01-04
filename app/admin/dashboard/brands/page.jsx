@@ -11,6 +11,7 @@ import { AddNewBrand } from './AddNewBrand';
 import { EditBrand } from './EditBrand';
 import { CategorySheet } from './CategorySheet';
 import { toast } from 'sonner';
+import ConfirmDelete from '@/components/confirmDelete';
 
 export default function AdminBrandsPage() {
   const router = useRouter();
@@ -120,19 +121,19 @@ export default function AdminBrandsPage() {
           </div>
         ) : (
           /* Brands Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredBrands.map((brand) => (
               <div
                 key={brand._id}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:border-primary/30 transition-all"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden p-2">
+                  <div className="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden border">
                     {brand.logo ? (
                       <img
                         src={brand.logo}
                         alt={brand.name}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = "none";
                           e.target.parentElement.innerHTML = `<svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>`;
@@ -176,22 +177,11 @@ export default function AdminBrandsPage() {
                   </span>
                   <div className="flex gap-2">
                     <EditBrand brand={brand} onSuccess={fetchBrands} />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                      onClick={() => handleDelete(brand._id, brand.name)}
+                    <ConfirmDelete
                       disabled={deletingId === brand._id}
-                    >
-                      {deletingId === brand._id ? (
-                        <Spinner className="h-4 w-4" />
-                      ) : (
-                        <>
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Delete
-                        </>
-                      )}
-                    </Button>
+                     onConfirm={() => handleDelete(brand._id, brand.name)} 
+                     bName={brand.name}
+                     />
                   </div>
                 </div>
               </div>

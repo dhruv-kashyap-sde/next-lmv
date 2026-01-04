@@ -28,6 +28,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DynamicListInput } from "@/components/ui/dynamic-list-input";
 
 export function AddNewVoucher() {
   const [open, setOpen] = useState(false);
@@ -41,8 +42,8 @@ export function AddNewVoucher() {
     brand: "",
     minOrderAmount: "",
     expiryDate: "",
-    termsAndConditions: "",
-    howToUse: "",
+    termsAndConditions: [],
+    howToUse: [],
   });
 
   // Fetch categories and brands when dialog opens
@@ -119,8 +120,8 @@ export function AddNewVoucher() {
         brand: "",
         minOrderAmount: "",
         expiryDate: "",
-        termsAndConditions: "",
-        howToUse: "",
+        termsAndConditions: [],
+        howToUse: [],
       });
       setOpen(false);
     } catch (error) {
@@ -138,8 +139,8 @@ export function AddNewVoucher() {
       brand: "",
       minOrderAmount: "",
       expiryDate: "",
-      termsAndConditions: "",
-      howToUse: "",
+      termsAndConditions: [],
+      howToUse: [],
     });
   };
 
@@ -151,7 +152,7 @@ export function AddNewVoucher() {
           Add New Voucher
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] scrollbar max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bebas text-primary">
             Create New Voucher
@@ -288,40 +289,30 @@ export function AddNewVoucher() {
 
             {/* Row 4: Terms and Conditions */}
             <div className="space-y-2">
-              <Label htmlFor="terms">
+              <Label>
                 Terms & Conditions <span className="text-red-500">*</span>
               </Label>
-              <Textarea
-                id="terms"
-                value={formData.termsAndConditions}
-                onChange={(e) =>
-                  handleInputChange("termsAndConditions", e.target.value)
-                }
+              <DynamicListInput
+                items={formData.termsAndConditions}
+                onChange={(items) => handleInputChange("termsAndConditions", items)}
+                placeholder="Enter a term or condition..."
+                label="Term"
                 required
-                rows={4}
-                className="focus:border-primary resize-none"
               />
-              <p className="text-xs text-gray-400">
-                Separate each condition with a new line
-              </p>
             </div>
 
             {/* Row 5: How to Use */}
             <div className="space-y-2">
-              <Label htmlFor="howToUse">
+              <Label>
                 How to Use <span className="text-red-500">*</span>
               </Label>
-              <Textarea
-                id="howToUse"
-                value={formData.howToUse}
-                onChange={(e) => handleInputChange("howToUse", e.target.value)}
+              <DynamicListInput
+                items={formData.howToUse}
+                onChange={(items) => handleInputChange("howToUse", items)}
+                placeholder="Enter a step..."
+                label="Step"
                 required
-                rows={4}
-                className="focus:border-primary resize-none"
               />
-              <p className="text-xs text-gray-400">
-                Number each step for clarity
-              </p>
             </div>
           </div>
 
