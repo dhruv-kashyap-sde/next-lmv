@@ -1,6 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/AuthContext';
 import { UserDashboardNavbar } from '@/components/dashboard/UserDashboardNavbar';
 import { 
   Ticket, 
@@ -14,37 +15,38 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function UserDashboard() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [canClaimToday, setCanClaimToday] = useState(true);
 
-  const claimedVouchers = [
-    { 
-      brand: 'Amazon', 
-      voucher: '20% OFF Electronics', 
-      code: 'ELEC20',
-      claimedAt: '2025-12-10',
-      expiresAt: '2025-12-31',
-      status: 'active'
-    },
-    { 
-      brand: 'Flipkart', 
-      voucher: 'Flat ₹150 OFF', 
-      code: 'FLIP150',
-      claimedAt: '2025-12-09',
-      expiresAt: '2025-12-25',
-      status: 'active'
-    },
-    { 
-      brand: 'Zomato', 
-      voucher: '50% OFF First Order', 
-      code: 'ZOMFIRST',
-      claimedAt: '2025-12-08',
-      expiresAt: '2025-12-15',
-      status: 'expiring'
-    },
-  ];
+  useEffect(() => {
+    console.log('User Dashboard - Auth state:', { user, loading });
+    
+    // If not loading and no user, redirect to login
+    if (!loading && !user) {
+      console.log('No user found, redirecting to login...');
+      router.replace('/login');
+    }
+  }, [user, loading, router]);
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner className="w-12 h-12" />
+      </div>
+    );
+  }
+
+  // If no user after loading, show nothing (will redirect)
+  if (!user) {
+    return null;
+  }
+
+  const claimedVouchers = [];
 
   return (
     <>

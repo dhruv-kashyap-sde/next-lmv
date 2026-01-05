@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate-oauth": "node scripts/validate-oauth-setup.js"
   },
   "dependencies": {
     "@next-auth/mongodb-adapter": "^1.1.3",

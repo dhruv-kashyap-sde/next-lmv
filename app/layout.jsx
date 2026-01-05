@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Raleway, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
+import { NextAuthProvider } from "@/lib/NextAuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,10 +37,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} scrollbar ${geistMono.variable} ${bebasNeue.variable} ${raleway.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-          <Toaster />
-        </AuthProvider>
+        <NextAuthProvider>
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

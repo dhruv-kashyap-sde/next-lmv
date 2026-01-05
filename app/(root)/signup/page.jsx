@@ -95,9 +95,14 @@ export default function SignupPage() {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signIn('google', { callbackUrl: '/' });
+      setLoading(true);
+      await signIn('google', { 
+        callbackUrl: '/auth-callback',
+        redirect: true 
+      });
     } catch (err) {
       setError('Failed to sign in with Google');
+      setLoading(false);
     }
   };
 

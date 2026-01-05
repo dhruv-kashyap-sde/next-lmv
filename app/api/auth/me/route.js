@@ -16,10 +16,14 @@ async function handler(request) {
     if (role === 'admin') {
       user = await Admin.findById(userId).select('-password');
     } else {
+      // Default to User model for any non-admin role
       user = await User.findById(userId).select('-password');
     }
+    
+    console.log("fetched user", user);
 
     if (!user) {
+      console.error('User not found with ID:', userId);
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
