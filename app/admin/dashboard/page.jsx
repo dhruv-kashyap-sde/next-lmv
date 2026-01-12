@@ -79,7 +79,7 @@ export default function AdminDashboard() {
       label: "Add Voucher",
       icon: Package,
       href: "/admin/dashboard/vouchers/new",
-      color: "primary",
+      color: "secondary",
     },
     {
       label: "Manage Users",
@@ -90,8 +90,8 @@ export default function AdminDashboard() {
     {
       label: "Add Brand",
       icon: ShoppingBag,
-      href: "/admin/dashboard/brands/new",
-      color: "primary",
+      href: "/admin/dashboard/brands/",
+      color: "secondary",
     },
     {
       label: "View Analytics",

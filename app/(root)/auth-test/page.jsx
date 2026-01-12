@@ -9,7 +9,7 @@ export default function AuthTestPage() {
   const { data: session, status } = useSession();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black p-8">
+    <div className="min-h-screen bg-linear-to-br from-background to-black p-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <h1 className="text-4xl font-bebas text-white mb-8">
           Authentication Test Page

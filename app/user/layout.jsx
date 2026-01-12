@@ -17,6 +17,8 @@ import {
   UserCog,
   TagIcon,
   Menu,
+  Home,
+  FileQuestionMark,
 } from "lucide-react";
 import {
   Sheet,
@@ -157,7 +159,7 @@ export default function UserDashboardLayout({ children }) {
                       {getInitials(user?.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden md:inline text-sm font-medium text-white">{user?.name}</span>
+                  {/* <span className="hidden md:inline text-sm font-medium text-white">{user?.name}</span> */}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end">
@@ -175,14 +177,32 @@ export default function UserDashboardLayout({ children }) {
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href="/user/dashboard/profile" className="cursor-pointer">
                     <UserCog className="mr-2 h-4 w-4" />
                     <span>Edit Profile</span>
                   </Link>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/" className="cursor-pointer">
+                    <Home className="mr-2 h-4 w-4" />
+                    <span>Go to Homepage</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link href={`/help`}>
+                  <FileQuestionMark className="mr-2 h-4 w-4" />
+                    <span>Help & Support</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+                
                 <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600 focus:text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>

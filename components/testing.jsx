@@ -79,14 +79,6 @@ const Spotlight = () => (
 );
 
 export default function Testing() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const vouchers = [
     { id: 1, brand: "Amazon", discount: "20%", code: "AMZ-2024-X", category: "Retail", color: "bg-orange-400" },
@@ -99,10 +91,6 @@ export default function Testing() {
 
   return (
     <div className="min-h-screen bg-zinc-950  font-raleway selection:bg-yellow-500/30 selection:text-yellow-200 ">
-      
-      {/* --- Navigation --- */}
-      
-      {/* --- Hero Section --- */}
 
       {/* --- Stats / Trust --- */}
       <div className="border-y border-white/5 bg-black/20 backdrop-blur-sm">
@@ -204,7 +192,7 @@ export default function Testing() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
             <Button asChild variant="brand" className="">
-              <Link href="/auth">Create Free Account</Link>
+              <Link href="/sign-up">Create Free Account</Link>
             </Button>
           </div>
         </div>
