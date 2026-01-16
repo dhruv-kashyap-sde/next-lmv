@@ -4,23 +4,12 @@ import {
   Search,
   Filter,
   X,
-  Menu,
   ChevronDown,
-  Tag,
-  Copy,
-  Info,
-  FilterIcon,
+  Gift,
 } from "lucide-react";
 import VoucherCard from "./voucherCard";
 import { Separator } from "@/components/ui/separator";
-
 import { Input } from "@/components/ui/input";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import VoucherSidebar from "./vouchersidebar";
 import {
@@ -32,322 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Mock Data
-const mockBrands = [
-  { _id: "1", name: "Amazon", logo: "https://logo.clearbit.com/amazon.com" },
-  {
-    _id: "2",
-    name: "Flipkart",
-    logo: "https://logo.clearbit.com/flipkart.com",
-  },
-  { _id: "3", name: "Myntra", logo: "https://logo.clearbit.com/myntra.com" },
-  { _id: "4", name: "Zomato", logo: "https://logo.clearbit.com/zomato.com" },
-  { _id: "5", name: "Swiggy", logo: "https://logo.clearbit.com/swiggy.com" },
-  { _id: "6", name: "Uber", logo: "https://logo.clearbit.com/uber.com" },
-  {
-    _id: "7",
-    name: "BigBasket",
-    logo: "https://logo.clearbit.com/bigbasket.com",
-  },
-  { _id: "8", name: "Nykaa", logo: "https://logo.clearbit.com/nykaa.com" },
-];
-
-const mockCategories = [
-  { _id: "cat1", name: "Electronics" },
-  { _id: "cat2", name: "Fashion" },
-  { _id: "cat3", name: "Food & Dining" },
-  { _id: "cat4", name: "Travel" },
-  { _id: "cat5", name: "Beauty & Personal Care" },
-  { _id: "cat6", name: "Groceries" },
-];
-
-const mockVouchers = [
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v1",
-    name: "Get 20% Off on Electronics",
-    brand: {
-      _id: "1",
-      name: "Amazon",
-      logo: "https://logo.clearbit.com/amazon.com",
-    },
-    category: { _id: "cat1", name: "Electronics" },
-    minOrder: 500,
-    discount: "20%",
-    code: "ELEC20",
-    expiryDate: "2025-12-31",
-    termsAndConditions: "Valid on all electronics. Min purchase ₹500.",
-    isAvailable: true,
-    createdAt: "2025-01-01",
-  },
-  {
-    _id: "v2",
-    name: "Flat ₹150 Off on Fashion",
-    brand: {
-      _id: "3",
-      name: "Myntra",
-      logo: "https://logo.clearbit.com/myntra.com",
-    },
-    category: { _id: "cat2", name: "Fashion" },
-    minOrder: 999,
-    discount: "₹150",
-    code: "FASHION150",
-    expiryDate: "2025-12-20",
-    termsAndConditions: "Valid on min purchase of ₹999",
-    isAvailable: true,
-    createdAt: "2025-02-01",
-  },
-  {
-    _id: "v3",
-    name: "50% Off First Order",
-    brand: {
-      _id: "4",
-      name: "Zomato",
-      logo: "https://logo.clearbit.com/zomato.com",
-    },
-    category: { _id: "cat3", name: "Food & Dining" },
-    minOrder: 200,
-    discount: "50%",
-    code: "ZOMFIRST",
-    expiryDate: "2025-12-15",
-    termsAndConditions: "Valid for new users only",
-    isAvailable: true,
-    createdAt: "2025-03-01",
-  },
-  {
-    _id: "v4",
-    name: "Get ₹100 Off on Groceries",
-    brand: {
-      _id: "7",
-      name: "BigBasket",
-      logo: "https://logo.clearbit.com/bigbasket.com",
-    },
-    category: { _id: "cat6", name: "Groceries" },
-    minOrder: 750,
-    discount: "₹100",
-    code: "GROCERY100",
-    expiryDate: "2025-12-25",
-    termsAndConditions: "Valid on orders above ₹750",
-    isAvailable: true,
-    createdAt: "2025-01-15",
-  },
-  {
-    _id: "v5",
-    name: "Free Delivery + 30% Off",
-    brand: {
-      _id: "5",
-      name: "Swiggy",
-      logo: "https://logo.clearbit.com/swiggy.com",
-    },
-    category: { _id: "cat3", name: "Food & Dining" },
-    minOrder: 300,
-    discount: "30%",
-    code: "SWIGGY30",
-    expiryDate: "2026-01-10",
-    termsAndConditions: "Valid on all restaurants",
-    isAvailable: true,
-    createdAt: "2025-02-10",
-  },
-  {
-    _id: "v6",
-    name: "Up to 40% Off on Beauty",
-    brand: {
-      _id: "8",
-      name: "Nykaa",
-      logo: "https://logo.clearbit.com/nykaa.com",
-    },
-    category: { _id: "cat5", name: "Beauty & Personal Care" },
-    minOrder: 599,
-    discount: "40%",
-    code: "BEAUTY40",
-    expiryDate: "2025-12-30",
-    termsAndConditions: "Valid on selected items",
-    isAvailable: true,
-    createdAt: "2025-01-20",
-  },
-  {
-    _id: "v7",
-    name: "₹200 Off on Fashion Items",
-    brand: {
-      _id: "2",
-      name: "Flipkart",
-      logo: "https://logo.clearbit.com/flipkart.com",
-    },
-    category: { _id: "cat2", name: "Fashion" },
-    minOrder: 1299,
-    discount: "₹200",
-    code: "FLIP200",
-    expiryDate: "2025-12-28",
-    termsAndConditions: "Min purchase ₹1299",
-    isAvailable: true,
-    createdAt: "2025-03-05",
-  },
-  {
-    _id: "v8",
-    name: "Get 15% Off on All Rides",
-    brand: {
-      _id: "6",
-      name: "Uber",
-      logo: "https://logo.clearbit.com/uber.com",
-    },
-    category: { _id: "cat4", name: "Travel" },
-    minOrder: 150,
-    discount: "15%",
-    code: "UBER15",
-    expiryDate: "2025-12-22",
-    termsAndConditions: "Valid on all ride types",
-    isAvailable: true,
-    createdAt: "2025-02-20",
-  },
-];
+import { VoucherGridSkeleton } from "@/components/VoucherCardSkeleton";
 
 const VoucherPage = () => {
-  const [vouchers, setVouchers] = useState(mockVouchers);
-  const [brands, setBrands] = useState(mockBrands);
-  const [categories, setCategories] = useState(mockCategories);
-  const [loading, setLoading] = useState(false);
+  const [vouchers, setVouchers] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-  const [filteredVouchers, setFilteredVouchers] = useState(mockVouchers);
+  const [filteredVouchers, setFilteredVouchers] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedSections, setExpandedSections] = useState({
     sort: false,
@@ -372,48 +59,99 @@ const VoucherPage = () => {
     { label: "Oldest First", value: "oldest" },
     { label: "Price: Low to High", value: "price-asc" },
     { label: "Price: High to Low", value: "price-desc" },
-    { label: "Expiring Soon", value: "expiry" },
+    { label: "Expiring Soon", value: "expiring" },
   ];
 
+  // Fetch data on mount
+  useEffect(() => {
+    fetchVouchers();
+    fetchBrands();
+    fetchCategories();
+  }, []);
+
+  // Re-filter when filters change
   useEffect(() => {
     filterAndSortVouchers();
-  }, [searchTerm, selectedBrand, selectedCategory, priceRange, sortBy]);
+  }, [searchTerm, selectedBrand, selectedCategory, priceRange, sortBy, vouchers]);
+
+  const fetchVouchers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('/api/vouchers/active');
+      const data = await response.json();
+
+      if (data.success) {
+        setVouchers(data.data);
+        setFilteredVouchers(data.data);
+      } else {
+        setError('Failed to load vouchers');
+      }
+    } catch (err) {
+      console.error('Error fetching vouchers:', err);
+      setError('Failed to load vouchers');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch('/api/admin/brands');
+      const data = await response.json();
+      if (data.success) {
+        setBrands(data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching brands:', err);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/admin/categories');
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
 
   const filterAndSortVouchers = () => {
     let filtered = [...vouchers];
 
+    // Search filter
     if (searchTerm) {
+      const search = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (voucher) =>
-          voucher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          voucher.brand?.name
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          voucher.termsAndConditions
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+          voucher.title?.toLowerCase().includes(search) ||
+          voucher.description?.toLowerCase().includes(search) ||
+          voucher.brand?.name?.toLowerCase().includes(search) ||
+          voucher.category?.name?.toLowerCase().includes(search)
       );
     }
 
+    // Brand filter
     if (selectedBrand) {
       filtered = filtered.filter(
-        (voucher) =>
-          voucher.brand?._id === selectedBrand ||
-          voucher.brand === selectedBrand
+        (voucher) => voucher.brand?._id === selectedBrand
       );
     }
 
+    // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(
-        (voucher) =>
-          voucher.category?._id === selectedCategory ||
-          voucher.category === selectedCategory
+        (voucher) => voucher.category?._id === selectedCategory
       );
     }
 
+    // Price range filter
     if (priceRange) {
       filtered = filtered.filter((voucher) => {
-        const price = voucher.minOrder;
+        const price = voucher.minOrder || 0;
         if (priceRange === "0-100") return price <= 100;
         if (priceRange === "101-200") return price >= 101 && price <= 200;
         if (priceRange === "201-300") return price >= 201 && price <= 300;
@@ -424,6 +162,7 @@ const VoucherPage = () => {
       });
     }
 
+    // Sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "newest":
@@ -431,10 +170,10 @@ const VoucherPage = () => {
         case "oldest":
           return new Date(a.createdAt) - new Date(b.createdAt);
         case "price-asc":
-          return a.minOrder - b.minOrder;
+          return (a.minOrder || 0) - (b.minOrder || 0);
         case "price-desc":
-          return b.minOrder - a.minOrder;
-        case "expiry":
+          return (b.minOrder || 0) - (a.minOrder || 0);
+        case "expiring":
           return new Date(a.expiryDate) - new Date(b.expiryDate);
         default:
           return 0;
@@ -466,11 +205,6 @@ const VoucherPage = () => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const copyToClipboard = (code) => {
-    navigator.clipboard.writeText(code);
-    alert(`Code "${code}" copied to clipboard!`);
-  };
-
   const getBrandName = (brandId) => {
     const brand = brands.find((b) => b._id === brandId);
     return brand ? brand.name : "Unknown Brand";
@@ -481,7 +215,7 @@ const VoucherPage = () => {
     return category ? category.name : "Unknown Category";
   };
 
-  // Sidebar Component
+  // Sidebar Filter Component
   const SidebarContent = () => (
     <div className="space-y-4">
       {/* Header */}
@@ -489,18 +223,15 @@ const VoucherPage = () => {
         All Vouchers
       </h1>
       <Separator className="bg-border" orientation="horizontal" />
-      <Input placeholder="Search vouchers, brands..." />
+      <div className="relative">
+        <Input
+          placeholder="Search vouchers, brands..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      </div>
       <div>
-        {/* <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search vouchers, brands..."
-            className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
-          />
-        </div> */}
         {/* Active Filters */}
         {(searchTerm ||
           selectedBrand ||
@@ -510,7 +241,7 @@ const VoucherPage = () => {
           <div className="flex flex-wrap items-center gap-2 mt-2">
             {searchTerm && (
               <span className="inline-flex items-center gap-1 bg-primary/20 border border-primary text-primary px-3 py-1 rounded-full text-sm">
-                Search: "{searchTerm}"
+                Search: &quot;{searchTerm}&quot;
                 <button onClick={() => setSearchTerm("")}>
                   <X className="w-3 h-3" />
                 </button>
@@ -562,9 +293,7 @@ const VoucherPage = () => {
         </button>
       </div>
 
-      {/* <div className="h-px bg-primary/20" /> */}
-
-      <div className=" max-h-[70vh] space-y-2 pr-2 overflow-auto scrollbar">
+      <div className="max-h-[70vh] space-y-2 pr-2 overflow-auto scrollbar">
         {/* Sort By */}
         <div className="border border-white/10 rounded-lg overflow-hidden">
           <button
@@ -728,16 +457,17 @@ const VoucherPage = () => {
   );
 
   return (
-    <div className="min-h-screen w-full p-4 ">
-      {/* <VoucherSidebar /> */}
+    <div className="min-h-screen w-full p-4">
       {/* Header */}
       <div className="flex sticky top-20 z-10 flex-col md:flex-row md:justify-between w-full gap-2 mb-3">
         {/* Search Bar */}
-        <div className=" bg-secondary rounded-md relative md:w-1/3">
+        <div className="bg-secondary rounded-md relative md:w-1/3">
           <Input
             type="text"
             placeholder="Search Vouchers"
-            className="text-primary"
+            className="text-primary pr-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
@@ -746,53 +476,64 @@ const VoucherPage = () => {
         </div>
         {/* Filters and Sorting */}
         <div className="flex justify-between gap-2">
-          <Select>
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
             <SelectTrigger className="w-[180px] bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-yellow-500/20 hover:border-yellow-500/50">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort By</SelectLabel>
-                <SelectItem value="newest" onClick={() => setSortBy("newest")}>
-                  Newest First
-                </SelectItem>
-                <SelectItem value="oldest" onClick={() => setSortBy("oldest")}>
-                  Oldest First
-                </SelectItem>
-                <SelectItem
-                  value="low-to-high"
-                  onClick={() => setSortBy("low-to-high")}
-                >
-                  Price: Low to High
-                </SelectItem>
-                <SelectItem
-                  value="high-to-low"
-                  onClick={() => setSortBy("high-to-low")}
-                >
-                  Price: High to Low
-                </SelectItem>
-                <SelectItem
-                  value="expiring-soon"
-                  onClick={() => setSortBy("expiring-soon")}
-                >
-                  Expiring Soon
-                </SelectItem>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
           <VoucherSidebar />
         </div>
       </div>
+
       {/* Main Voucher Grid */}
-      <main className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 rounded-md min-h-screen w-full max-w-full">
-        {filteredVouchers.length === 0 ? (
-          <p className="text-center text-primary mt-10">
-            No vouchers found matching your criteria.
-          </p>
+      <main className="rounded-md min-h-screen w-full max-w-full">
+        {loading ? (
+          <VoucherGridSkeleton count={9} />
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-400 mb-4">{error}</p>
+            <Button onClick={fetchVouchers} variant="outline">
+              Try Again
+            </Button>
+          </div>
+        ) : filteredVouchers.length === 0 ? (
+          <div className="text-center py-12">
+            <Gift className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-2xl font-bebas text-gray-400 mb-2">
+              No Vouchers Found
+            </h3>
+            <p className="text-gray-500 mb-4">
+              {vouchers.length > 0
+                ? "Try adjusting your filters to find vouchers."
+                : "Check back later for new deals!"}
+            </p>
+            {getActiveFiltersCount() > 0 && (
+              <Button onClick={clearFilters} variant="outline">
+                Clear Filters
+              </Button>
+            )}
+          </div>
         ) : (
-          filteredVouchers.map((voucher, id) => (
-            <VoucherCard key={id} voucher={voucher} />
-          ))
+          <>
+            <div className="mb-4 text-sm text-gray-400">
+              Showing {filteredVouchers.length} of {vouchers.length} vouchers
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredVouchers.map((voucher) => (
+                <VoucherCard key={voucher._id} voucher={voucher} />
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>

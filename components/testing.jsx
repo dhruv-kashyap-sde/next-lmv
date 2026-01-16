@@ -12,49 +12,84 @@ import {
   Star,
   Search,
   User,
+  Tag,
+  Calendar,
+  ShoppingCart,
 } from 'lucide-react';
 import Tutorial from '@/components/Tutorial';
 import { Button } from '@/components/ui/button';
 import Link from "next/link";
 import Faqs from '@/components/faqs';
+import { VoucherGridSkeleton } from '@/components/VoucherCardSkeleton';
 
 // --- Components ---
 
+const VoucherCard = ({ voucher }) => {
+  const isExpiringSoon = (expiryDate) => {
+    const today = new Date();
+    const expiry = new Date(expiryDate);
+    const daysUntilExpiry = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+    return daysUntilExpiry <= 7 && daysUntilExpiry >= 0;
+  };
 
-const VoucherCard = ({ brand, discount, code, category, color }) => (
-  <div className="group relative bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl overflow-hidden hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-    {/* Glow Effect */}
-    <div className="absolute inset-0 bg-linear-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-    
-    <div className="p-6 relative z-10">
-      <div className="flex justify-between items-start mb-4">
-        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-black ${color}`}>
-          {brand.charAt(0)}
-        </div>
-        <span className="text-xs font-semibold px-2 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
-          {category}
+  return (
+    <div className="relative bg-sidebar/70 backdrop-blur-sm border border-white/10 rounded-xl p-4 md:p-6 hover:border-primary/50 transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
+      {isExpiringSoon(voucher.expiryDate) && (
+        <span className="absolute top-2 right-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+          Expiring Soon!
         </span>
-      </div>
-      
-      <h3 className="text-xl font-bold   mb-1">{brand}</h3>
-      <div className="text-3xl font-black text-yellow-500 mb-4">{discount} OFF</div>
-      
-      <div className="flex gap-2">
-        <div className="flex-1 bg-black/50 rounded-lg p-2 font-mono text-center text-zinc-400 border border-zinc-800 border-dashed group-hover:  transition-colors">
-          {code}
+      )}
+
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-4">
+        <img
+          src={voucher.brand?.logo || `https://ui-avatars.com/api/?name=${voucher.brand?.name || 'Brand'}&background=random`}
+          alt={voucher.brand?.name}
+          className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+        />
+        <div className="flex-1 text-center md:text-left">
+          <h3 className="font-bebas text-xl md:text-2xl text-primary mb-1">
+            {voucher.brand?.name}
+          </h3>
+          <p className="text-white font-semibold text-sm md:text-base line-clamp-2">
+            {voucher.title}
+          </p>
         </div>
-        <button className="bg-white text-black p-2 rounded-lg hover:bg-yellow-500 transition-colors font-semibold">
-          Copy
-        </button>
       </div>
-      
-      <div className="mt-4 flex items-center gap-2 text-xs text-zinc-500">
-        <Clock size={12} />
-        <span>Expires in 12h 30m</span>
+
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-medium">
+            <Tag className="w-3 h-3" />
+            {voucher.category?.name || 'General'}
+          </span>
+          {voucher.isFeatured && (
+            <span className="inline-flex items-center gap-1 bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs font-medium">
+              <Star className="w-3 h-3" />
+              Featured
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between text-sm text-gray-400">
+          <span className="flex items-center gap-1">
+            <ShoppingCart className="w-4 h-4" />
+            Min: ₹{voucher.minOrder}
+          </span>
+          <span className="flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            {new Date(voucher.expiryDate).toLocaleDateString()}
+          </span>
+        </div>
+
+        <div className="pt-3 border-t border-white/10">
+          <Button asChild className="w-full" variant="brand">
+            <Link href="/vouchers">Get Code</Link>
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Feature = ({ icon: Icon, title, desc }) => (
   <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 transition-colors">
@@ -79,21 +114,95 @@ const Spotlight = () => (
 );
 
 export default function Testing() {
+  const [vouchers, setVouchers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const vouchers = [
-    { id: 1, brand: "Amazon", discount: "20%", code: "AMZ-2024-X", category: "Retail", color: "bg-orange-400" },
-    { id: 2, brand: "Uber", discount: "$15", code: "RIDE-SAFE", category: "Travel", color: "bg-white" },
-    { id: 3, brand: "Netflix", discount: "1 Month", code: "BINGE-ON", category: "Entertainment", color: "bg-red-600  " },
-    { id: 4, brand: "Nike", discount: "30%", code: "JUST-DO-IT", category: "Fashion", color: "bg-zinc-200" },
-    { id: 5, brand: "Starbucks", discount: "50%", code: "COFFEE-LVR", category: "Food", color: "bg-green-600  " },
-    { id: 6, brand: "Spotify", discount: "3 Months", code: "LISTEN-FREE", category: "Music", color: "bg-green-400" },
-  ];
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/vouchers/latest');
+        const data = await response.json();
+        
+        if (data.success) {
+          setVouchers(data.data);
+        } else {
+          setError('Failed to load vouchers');
+        }
+      } catch (err) {
+        console.error('Error fetching vouchers:', err);
+        setError('Failed to load vouchers');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVouchers();
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-950  font-raleway selection:bg-yellow-500/30 selection:text-yellow-200 ">
 
+      {/* --- Vouchers Grid --- */}
+      <section id="vouchers" className="py-24 border-t border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-bold font-bebas tracking-wide mb-4">Trending Vouchers</h2>
+              <p className="text-zinc-400 max-w-md">
+                Grab these hot deals before they run out. Limited quantities available for today.
+              </p>
+            </div>
+            
+            <div className="flex gap-2 w-full md:w-auto">
+               <div className="relative flex-1 md:flex-initial">
+                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+                 <input 
+                  type="text" 
+                  placeholder="Search brands..." 
+                  className="w-full md:w-64 bg-zinc-900 border border-zinc-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-yellow-500 transition-colors text-sm"
+                 />
+               </div>
+               <Button variant="outline" className="px-4!">Filter</Button>
+            </div>
+          </div>
+
+          {loading ? (
+            <VoucherGridSkeleton count={9} />
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-400 mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Try Again
+              </Button>
+            </div>
+          ) : vouchers.length === 0 ? (
+            <div className="text-center py-12">
+              <Gift className="w-16 h-16 text-zinc-500 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-zinc-400 mb-2">No Vouchers Available</h3>
+              <p className="text-zinc-500">Check back later for new deals!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {vouchers.map((voucher) => (
+                <VoucherCard key={voucher._id} voucher={voucher} />
+              ))}
+            </div>
+          )}
+
+          <div className="mt-16 text-center">
+            <Button asChild variant="secondary" className="group">
+              <Link href="/vouchers">
+                View All Vouchers
+                <ChevronRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
       {/* --- Stats / Trust --- */}
-      <div className="border-y border-white/5 bg-black/20 backdrop-blur-sm">
+      <div className="border-y border-white/5 bg-zinc-900/30 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
             { label: "Active Users", value: "50K+" },
@@ -137,44 +246,6 @@ export default function Testing() {
         </div>
       </section>
 
-      {/* --- Vouchers Grid --- */}
-      <section id="vouchers" className="py-24 bg-zinc-900/20 border-t border-white/5">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">Trending Vouchers</h2>
-              <p className="text-zinc-400 max-w-md">
-                Grab these hot deals before they run out. Limited quantities available for today.
-              </p>
-            </div>
-            
-            <div className="flex gap-2 w-full md:w-auto">
-               <div className="relative flex-1 md:flex-initial">
-                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-                 <input 
-                  type="text" 
-                  placeholder="Search brands..." 
-                  className="w-full md:w-64 bg-zinc-900 border border-zinc-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-yellow-500 transition-colors text-sm"
-                 />
-               </div>
-               <Button variant="outline" className="px-4!">Filter</Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vouchers.map((voucher) => (
-              <VoucherCard key={voucher.id} {...voucher} />
-            ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <Button variant="secondary" className="group">
-              View All Vouchers
-              <ChevronRight className="inline-block ml-2 group-hover:translate-x-1 transition-transform" size={16} />
-            </Button>
-          </div>
-        </div>
-      </section>
 
         {/* --- Tutorial Section --- */}
         <Tutorial/>

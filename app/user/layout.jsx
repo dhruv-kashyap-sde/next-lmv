@@ -19,6 +19,7 @@ import {
   Menu,
   Home,
   FileQuestionMark,
+  Tag,
 } from "lucide-react";
 import {
   Sheet,
@@ -188,11 +189,17 @@ export default function UserDashboardLayout({ children }) {
                 <DropdownMenuItem asChild>
                   <Link href="/" className="cursor-pointer">
                     <Home className="mr-2 h-4 w-4" />
-                    <span>Go to Homepage</span>
+                    <span>Homepage</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/vouchers" className="cursor-pointer">
+                    <Tag className="mr-2 h-4 w-4" />
+                    <span>Vouchers Page</span>
                   </Link>
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator /> */}
 
                 <DropdownMenuItem asChild>
                   <Link href={`/help`}>
