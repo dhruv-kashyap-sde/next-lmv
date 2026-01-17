@@ -28,7 +28,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -66,17 +66,6 @@ export default function AdminDashboardLayout({ children }) {
   if (!user || user.role !== "admin") {
     return null;
   }
-
-  const getInitials = (name) => {
-    return (
-      name
-        ?.split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2) || "??"
-    );
-  };
 
   const adminNavItems = [
     {

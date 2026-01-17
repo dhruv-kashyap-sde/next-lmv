@@ -28,7 +28,7 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet'
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
@@ -48,7 +48,7 @@ export default function UserDashboardLayout({ children }) {
       if (!user) {
         // Not logged in, redirect to login
         router.push('/login');
-        toast.error('User not found. Please log in.');
+        toast.error('Please log in.');
       } else if (user.role === 'admin') {
         // Admin trying to access user routes, redirect to admin dashboard
         router.push('/admin/dashboard');
@@ -68,15 +68,6 @@ export default function UserDashboardLayout({ children }) {
   if (!user || user.role === 'admin') {
     return null;
   }
-
-  const getInitials = (name) => {
-    return name
-      ?.split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2) || '??';
-  };
 
   const userNavItems = [
     {

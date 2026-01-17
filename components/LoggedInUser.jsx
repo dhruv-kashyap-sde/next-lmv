@@ -10,18 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, LayoutDashboard } from "lucide-react";
+import { getInitials } from "@/lib/utils";
 
 export function LoggedInUser({ user, logout }) {
   if (!user) return null;
-
-  const getInitials = (name) => {
-    return name
-      ?.split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2) || '??';
-  };
 
   const dashboardPath = user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard';
 

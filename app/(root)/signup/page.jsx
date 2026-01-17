@@ -1,27 +1,48 @@
 "use client";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/lib/AuthContext';
+import { ArrowLeft, Loader2, Mail, CheckCircle2 } from 'lucide-react';
 
 export default function SignupPage() {
   const router = useRouter();
   const { checkAuth } = useAuth();
+  const [step, setStep] = useState(1); // 1: Form, 2: OTP verification
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-  const [captchaToken, setCaptchaToken] = useState(null);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [otpExpiresIn, setOtpExpiresIn] = useState(600); // 10 minutes in seconds
+  
+  const otpInputRefs = useRef([]);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
+  // OTP expiry timer
+  useEffect(() => {
+    if (step === 2 && otpExpiresIn > 0) {
+      const timer = setTimeout(() => setOtpExpiresIn(otpExpiresIn - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [step, otpExpiresIn]);
 
   const handleChange = (e) => {
     setFormData({
@@ -31,45 +52,109 @@ export default function SignupPage() {
     setError('');
   };
 
-  const handleCaptchaChange = (token) => {
-    setCaptchaToken(token);
+  const handleOtpChange = (index, value) => {
+    // Only allow numbers
+    if (value && !/^\d$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    setError('');
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleOtpKeyDown = (index, e) => {
+    // Handle backspace
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').slice(0, 6);
+    if (/^\d+$/.test(pastedData)) {
+      const newOtp = pastedData.split('').concat(Array(6).fill('')).slice(0, 6);
+      setOtp(newOtp);
+      // Focus last filled input or first empty
+      const lastIndex = Math.min(pastedData.length - 1, 5);
+      otpInputRefs.current[lastIndex]?.focus();
+    }
+  };
+
+  // Step 1: Send OTP
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
-      setLoading(false);
       return;
     }
 
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long');
-      setLoading(false);
       return;
     }
 
-    // if (!captchaToken) {
-    //   setError('Please complete the captcha');
-    //   setLoading(false);
-    //   return;
-    // }
+    setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch('/api/auth/send-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          captchaToken,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setStep(2);
+        setOtp(['', '', '', '', '', '']);
+        setOtpExpiresIn(data.expiresIn || 600);
+        setResendCooldown(60); // 1 minute cooldown
+      } else {
+        setError(data.error || 'Failed to send verification code');
+        if (data.retryAfter) {
+          setResendCooldown(data.retryAfter);
+        }
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 2: Verify OTP
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    const otpCode = otp.join('');
+    if (otpCode.length !== 6) {
+      setError('Please enter the complete 6-digit code');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          otp: otpCode,
         }),
       });
 
@@ -77,17 +162,53 @@ export default function SignupPage() {
 
       if (data.success) {
         setSuccess(true);
-        // Refresh auth state before redirect
         await checkAuth();
-        await new Promise(resolve => setTimeout(resolve, 100));
         setTimeout(() => {
-          router.push('/');
-        }, 2000);
+          router.push('/user/dashboard');
+        }, 1500);
       } else {
-        setError(data.error || 'Failed to create account');
+        setError(data.error || 'Invalid verification code');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend OTP
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0) return;
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setOtp(['', '', '', '', '', '']);
+        setOtpExpiresIn(data.expiresIn || 600);
+        setResendCooldown(60);
+        setError(''); // Clear any previous errors
+      } else {
+        setError(data.error || 'Failed to resend code');
+        if (data.retryAfter) {
+          setResendCooldown(data.retryAfter);
+        }
+      }
+    } catch (err) {
+      setError('Failed to resend code. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -106,27 +227,136 @@ export default function SignupPage() {
     }
   };
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Success state
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-900 via-blue-900 to-black px-4">
-        <div className="bg-white/10 backdrop-blur-md p-8 rounded-lg border border-white/20 max-w-md w-full text-center">
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="bg-white/5 backdrop-blur-md p-8 rounded-lg border border-white/10 max-w-md w-full text-center">
           <div className="mb-4">
-            <svg className="w-16 h-16 mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <CheckCircle2 className="w-16 h-16 mx-auto text-green-400" />
           </div>
-          <h2 className="text-2xl font-bebas text-white mb-2">Account Created!</h2>
+          <h2 className="text-2xl font-bebas text-primary mb-2">Account Created!</h2>
           <p className="text-gray-300 mb-4">
-            Please check your email to verify your account.
+            Welcome to LMV! Redirecting to your dashboard...
           </p>
-          <p className="text-sm text-gray-400">Redirecting...</p>
+          <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary" />
         </div>
       </div>
     );
   }
 
+  // Step 2: OTP Verification
+  if (step === 2) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 py-12">
+        <div className="bg-white/5 backdrop-blur-md p-8 rounded-md border max-w-md w-full">
+          {/* <button
+            onClick={() => setStep(1)}
+            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button> */}
+
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-8 h-8 text-primary" />
+            </div>
+            <h1 className="text-3xl font-bebas text-primary mb-2">
+              Verify Your Email
+            </h1>
+            <p className="text-gray-300 text-sm">
+              We sent a 6-digit code to<br />
+              <span className="text-primary font-semibold">{formData.email}</span>
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded mb-4 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleVerifyOtp} className="space-y-6">
+            {/* OTP Input */}
+            <div className="flex justify-center gap-2" onPaste={handleOtpPaste}>
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(el) => (otpInputRefs.current[index] = el)}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                  className="w-12 h-14 text-center text-2xl font-bold bg-white/5 border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  autoFocus={index === 0}
+                />
+              ))}
+            </div>
+
+            {/* Timer */}
+            <div className="text-center text-sm">
+              {otpExpiresIn > 0 ? (
+                <p className="text-gray-400">
+                  Code expires in <span className="text-primary font-semibold">{formatTime(otpExpiresIn)}</span>
+                </p>
+              ) : (
+                <p className="text-red-400">Code expired. Please request a new one.</p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading || otp.join('').length !== 6 || otpExpiresIn === 0}
+              className="w-full"
+              variant="brand"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                'Verify & Create Account'
+              )}
+            </Button>
+          </form>
+
+          {/* Resend */}
+          <div className="mt-6 text-center">
+            <p className="text-gray-400 text-sm">
+              Didn't receive the code?{' '}
+              {resendCooldown > 0 ? (
+                <span className="text-gray-500">
+                  Resend in {resendCooldown}s
+                </span>
+              ) : (
+                <button
+                  onClick={handleResendOtp}
+                  disabled={loading}
+                  className="text-primary hover:underline font-semibold"
+                >
+                  Resend Code
+                </button>
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Step 1: Registration Form
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="bg-white/5 backdrop-blur-md p-8 py-4 rounded-md border max-w-md w-full">
         <h1 className="text-4xl font-bebas text-center text-primary mb-2">
           Create Account
@@ -141,7 +371,7 @@ export default function SignupPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSendOtp} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
               Full Name
@@ -206,43 +436,40 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* <div className="flex justify-center">
-            <ReCAPTCHA
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-              onChange={handleCaptchaChange}
-              theme="dark"
-            />
-          </div> */}
-
           <Button
             type="submit"
             disabled={loading}
             className="w-full"
             variant="brand"
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Sending Code...
+              </>
+            ) : (
+              'Continue'
+            )}
           </Button>
         </form>
 
         <div className="mt-6">
           <div className="relative w-full">
-                <div className=" flex justify-center items-center text-sm ">
-                    <div className="w-full">
-
-                    <Separator className="bg-input" orientation='horizontal'></Separator>
-                    </div>
-                  <span className="px-2 whitespace-nowrap ">Or continue with</span>
-                    <div className="w-full">
-
-                    <Separator className="bg-input" orientation='horizontal'/>
-                    </div>
-
-                </div>
+            <div className="flex justify-center items-center text-sm">
+              <div className="w-full">
+                <Separator className="bg-input" orientation='horizontal' />
               </div>
+              <span className="px-2 whitespace-nowrap">Or continue with</span>
+              <div className="w-full">
+                <Separator className="bg-input" orientation='horizontal' />
+              </div>
+            </div>
+          </div>
 
           <Button
             type="button"
             onClick={handleGoogleSignIn}
+            disabled={loading}
             className="w-full mt-4 bg-white hover:bg-gray-100 text-black font-semibold flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

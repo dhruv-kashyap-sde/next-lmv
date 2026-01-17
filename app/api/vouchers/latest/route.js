@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Voucher from '@/models/Voucher';
+import Brand from '@/models/Brand';
+import Category from '@/models/Category';
 
 // GET - Fetch latest 9 active vouchers (Public endpoint - no auth, no code)
 export async function GET(request) {
