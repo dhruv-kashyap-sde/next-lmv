@@ -1,40 +1,57 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   CheckCircle,
   Info,
-  ChevronDown,
   Shield,
   Zap,
   BadgeCheck,
 } from "lucide-react";
-import axios from "axios";
 import Faqs from "@/components/faqs";
 
+export const metadata = {
+  title: "About Us - LMV | Loot My Vouchers",
+  description: "Learn about LMV - your trusted platform for genuine vouchers and discount codes. We share authentic deals from popular brands to help you save money on every purchase.",
+  keywords: [
+    "about lmv",
+    "voucher platform",
+    "discount codes",
+    "genuine vouchers",
+    "verified deals",
+    "money saving",
+    "about us",
+    "loot my vouchers",
+  ],
+  openGraph: {
+    title: "About LMV - Loot My Vouchers Platform",
+    description: "Discover how LMV helps you save money with verified vouchers from popular brands. 100% secure and instant access to genuine deals.",
+    type: "website",
+    url: "https://lootmyvouchers.com/about",
+    siteName: "LMV - Loot My Vouchers",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "LMV - Loot My Vouchers About Us",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About LMV - Loot My Vouchers",
+    description: "Learn about LMV - your trusted platform for verified vouchers and discount codes from popular brands.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    canonical: "https://lootmyvouchers.com/about",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
 const About = () => {
-  const [brands, setBrands] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const URL = "http://localhost:3000" || import.meta.env.VITE_API_URL ;
-
-  // useEffect(() => {
-  //   fetchBrands();
-  // }, []);
-
-  const fetchBrands = async () => {
-    try {
-      const response = await axios.get(`${URL}/brands`, {
-        withCredentials: true,
-      });
-      if (response.data.brands) {
-        setBrands(response.data.brands.slice(0, 12));
-      }
-    } catch (error) {
-      console.error("Error fetching brands:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const features = [
     {
@@ -62,7 +79,7 @@ const About = () => {
       text: "I have ",
       chip: { label: "Earned", color: "bg-primary text-black" },
       text2: " these vouchers through making transactions on ",
-      chip2: { label: "Paytm", color: "bg-secondary text-black" },
+      chip2: { label: "Paytm", color: "bg-background text-primary" },
     },
     {
       text: "These vouchers are ",

@@ -2,13 +2,9 @@
 import React, { useState, useEffect } from "react";
 import {
   Search,
-  Filter,
-  X,
-  ChevronDown,
   Gift,
 } from "lucide-react";
 import VoucherCard from "./voucherCard";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import VoucherSidebar from "./vouchersidebar";
