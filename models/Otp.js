@@ -30,6 +30,10 @@ const OtpSchema = new mongoose.Schema({
     type: Number,
     default: 3,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   expiresAt: {
     type: Date,
     required: true,

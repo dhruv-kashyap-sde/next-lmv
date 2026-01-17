@@ -142,7 +142,7 @@ export default function Testing() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950  font-raleway selection:bg-yellow-500/30 selection:text-yellow-200 ">
+    <div className="min-h-screen bg-zinc-950  font-raleway  ">
 
       {/* --- Vouchers Grid --- */}
       <section id="vouchers" className="py-24 border-t border-white/5">
@@ -263,7 +263,7 @@ export default function Testing() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
             <Button asChild variant="brand" className="">
-              <Link href="/sign-up">Create Free Account</Link>
+              <Link href="/signup">Create Free Account</Link>
             </Button>
           </div>
         </div>

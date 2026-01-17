@@ -6,6 +6,7 @@ import { Separator } from "./separator";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { LoggedInUser } from "../LoggedInUser";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +43,7 @@ const Navbar = () => {
                 {user ? (
                   <LoggedInUser user={user} logout={logout} />
                 ) : (
-                  <Button asChild variant="brand" size="sm">
+                  <Button asChild variant="link" size="sm">
                     <Link href="/login">Login</Link>
                   </Button>
                 )}
@@ -79,9 +80,12 @@ const Navbar = () => {
                 {user ? (
                   <LoggedInUser user={user} logout={logout} />
                 ) : (
-                  <Button asChild variant="brand" size="sm">
-                    <Link href="/login">Login</Link>
-                  </Button>
+                  <><Button asChild variant="link" size="sm">
+                      <Link href="/login">Login</Link>
+                    </Button>
+                    <Button asChild variant="outline" className={cn('bg-transparent text-primary hover:bg-primary/10 hover:text-foreground')} size="sm">
+                        <Link href="/signup">Get Started</Link>
+                      </Button></>
                 )}
               </>
             )}
