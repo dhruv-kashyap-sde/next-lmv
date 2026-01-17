@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "./button";
 import { Separator } from "./separator";
 import { Menu, X, LogOut, User } from "lucide-react";
@@ -10,9 +11,8 @@ import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const { user, loading, logout } = useAuth();
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -61,15 +61,23 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             <div className="flex justify-center gap-6 items-center">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  className="p-2 rounded-t-md border-b-2 border-transparent hover:bg-primary/5 hover:border-b-2 hover:text-primary hover:border-primary transition-all"
-                  href={link.href}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    className={cn(
+                      "p-2 rounded-t-md border-b-2 transition-all",
+                      isActive
+                        ? "border-primary text-primary"
+                        : "border-transparent hover:bg-primary/5 hover:text-primary hover:border-primary"
+                    )}
+                    href={link.href}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
             <div className="mx-4 h-8">
               <Separator orientation="vertical" />
@@ -80,12 +88,21 @@ const Navbar = () => {
                 {user ? (
                   <LoggedInUser user={user} logout={logout} />
                 ) : (
-                  <><Button asChild variant="link" size="sm">
+                  <>
+                    <Button asChild variant="link" size="sm">
                       <Link href="/login">Login</Link>
                     </Button>
-                    <Button asChild variant="outline" className={cn('bg-transparent text-primary hover:bg-primary/10 hover:text-foreground')} size="sm">
-                        <Link href="/signup">Get Started</Link>
-                      </Button></>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className={cn(
+                        "bg-transparent text-primary hover:bg-primary/10 hover:text-foreground"
+                      )}
+                      size="sm"
+                    >
+                      <Link href="/signup">Get Started</Link>
+                    </Button>
+                  </>
                 )}
               </>
             )}
@@ -96,7 +113,9 @@ const Navbar = () => {
       {/* Mobile Sidebar */}
       <div
         className={`fixed inset-0 z-40 md:hidden transition-opacity duration-300 ${
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       >
         {/* Overlay */}
@@ -108,7 +127,7 @@ const Navbar = () => {
         {/* Sidebar */}
         <div
           className={`absolute top-0 right-0 h-full w-72 bg-[rgba(21,21,21,0.95)] backdrop-blur-md border-l border-white/10 shadow-xl transform transition-transform duration-300 ${
-            isOpen ? 'translate-x-0' : 'translate-x-full'
+            isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
           <div className="flex flex-col h-full">
@@ -127,16 +146,24 @@ const Navbar = () => {
             {/* Navigation Links */}
             <div className="flex-1 overflow-y-auto py-6">
               <div className="flex flex-col space-y-2 px-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={closeMenu}
-                    className="p-3 rounded-md text-neutral-300 hover:bg-primary/10 hover:text-primary transition-all border border-transparent hover:border-primary/30"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={closeMenu}
+                      className={cn(
+                        "p-3 rounded-md transition-all border",
+                        isActive
+                          ? "bg-primary/10 text-primary border-primary/30"
+                          : "text-neutral-300 border-transparent hover:bg-primary/10 hover:text-primary hover:border-primary/30"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>

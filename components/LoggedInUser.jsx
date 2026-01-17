@@ -48,7 +48,7 @@ export function LoggedInUser({ user, logout }) {
         <DropdownMenuItem asChild>
           <Link href={dashboardPath} className="cursor-pointer">
             <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span>Dashboard</span>
+            <span>My Vouchers</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
