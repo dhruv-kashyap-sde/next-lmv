@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -26,7 +27,7 @@ export default function VerifyEmailPage() {
       const response = await fetch(`/api/auth/verify-email?token=${token}`);
       const data = await response.json();
 
-      if (response.data.success) {
+      if (data.success) {
         setStatus('success');
         setMessage('Your email has been verified successfully!');
       } else {
@@ -85,5 +86,21 @@ export default function VerifyEmailPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-purple-900 via-blue-900 to-black px-4">
+        <div className="bg-white/10 backdrop-blur-md p-8 rounded-lg border border-white/20 max-w-md w-full text-center">
+          <Loader2 className="w-16 h-16 animate-spin mx-auto mb-4 text-primary" />
+          <h2 className="text-2xl font-bebas text-white mb-2">Loading...</h2>
+          <p className="text-gray-300">Please wait...</p>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
