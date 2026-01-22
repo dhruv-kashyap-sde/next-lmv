@@ -39,6 +39,11 @@ const VoucherPage = () => {
     price: false,
   });
   const [selectedVoucher, setSelectedVoucher] = useState(null);
+  
+  // Claim status state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [canClaimToday, setCanClaimToday] = useState(false);
+  const [claimedVoucherIds, setClaimedVoucherIds] = useState([]);
 
   const priceRanges = [
     { label: "All Prices", value: "" },
@@ -61,14 +66,32 @@ const VoucherPage = () => {
   // Fetch data on mount
   useEffect(() => {
     fetchVouchers();
-    fetchBrands();
-    fetchCategories();
+    fetchClaimStatus();
+    // fetchBrands();
+    // fetchCategories();
   }, []);
 
   // Re-filter when filters change
   useEffect(() => {
     filterAndSortVouchers();
   }, [searchTerm, selectedBrand, selectedCategory, priceRange, sortBy, vouchers]);
+
+  const fetchClaimStatus = async () => {
+    try {
+      const response = await fetch('/api/vouchers/claim', {
+        credentials: 'include',
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setIsLoggedIn(data.isLoggedIn);
+        setCanClaimToday(data.canClaimToday);
+        setClaimedVoucherIds(data.claimedVoucherIds || []);
+      }
+    } catch (err) {
+      console.error('Error fetching claim status:', err);
+    }
+  };
 
   const fetchVouchers = async () => {
     try {
@@ -271,7 +294,14 @@ const VoucherPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredVouchers.map((voucher) => (
-                <VoucherCard key={voucher._id} voucher={voucher} />
+                <VoucherCard 
+                  key={voucher._id} 
+                  voucher={voucher}
+                  isLoggedIn={isLoggedIn}
+                  canClaimToday={canClaimToday}
+                  claimedVoucherIds={claimedVoucherIds}
+                  onClaimSuccess={fetchClaimStatus}
+                />
               ))}
             </div>
           </>

@@ -21,6 +21,8 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isAdmin = searchParams.get("admin") === "true";
+  const redirectUrl = searchParams.get("redirect");
+  const message = searchParams.get("message");
   const { checkAuth } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -29,6 +31,14 @@ function LoginForm() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [infoMessage, setInfoMessage] = useState("");
+
+  // Show message from URL params (e.g., "Please login to claim voucher")
+  useEffect(() => {
+    if (message === "login_required") {
+      setInfoMessage("Please login to claim voucher");
+    }
+  }, [message]);
 
   // Forgot Password State
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
@@ -292,6 +302,9 @@ function LoginForm() {
         if (data.user.role === "admin") {
           console.log("Redirecting to admin dashboard");
           router.push("/admin/dashboard");
+        } else if (redirectUrl) {
+          // Redirect to the original page if specified
+          router.push(redirectUrl);
         } else {
           router.push("/");
         }
@@ -327,6 +340,13 @@ function LoginForm() {
         <p className="text-center text-gray-300 mb-6">
           {isAdmin ? "Access your admin dashboard" : "Log in to claim vouchers"}
         </p>
+
+        {infoMessage && (
+          <div className="bg-blue-500/20 border border-blue-500/50 text-blue-200 px-4 py-3 rounded mb-4 flex items-center gap-2">
+            <Mail className="w-4 h-4" />
+            {infoMessage}
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded mb-4">

@@ -21,6 +21,7 @@ export async function GET(request) {
     const query = {
       isActive: true,
       expiryDate: { $gte: currentDate },
+      claimedBy: null, // Only show unclaimed vouchers
     };
 
     // Add category filter

@@ -12,6 +12,7 @@ export const GET = withAuth(
       const vouchers = await Voucher.find()
         .populate('brand', 'name logo')
         .populate('category', 'name icon')
+        .populate('claimedBy', 'name email') // Include who claimed it
         .select('+code') // Include code field for admin
         .sort({ createdAt: -1 });
 
