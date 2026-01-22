@@ -53,11 +53,13 @@ export async function POST(request) {
     const isValid = await otpRecord.verifyOtp(otp);
 
     if (!isValid) {
-      // Increment attempts
-      otpRecord.attempts += 1;
-      await otpRecord.save();
+      // Increment attempts using atomic update
+      await Otp.updateOne(
+        { _id: otpRecord._id },
+        { $inc: { attempts: 1 } }
+      );
 
-      const remainingAttempts = otpRecord.maxAttempts - otpRecord.attempts;
+      const remainingAttempts = otpRecord.maxAttempts - otpRecord.attempts - 1;
       return NextResponse.json(
         { 
           success: false, 
@@ -67,9 +69,11 @@ export async function POST(request) {
       );
     }
 
-    // Mark OTP as verified (don't delete yet, will be used in reset-password)
-    otpRecord.verified = true;
-    await otpRecord.save();
+    // Mark OTP as verified using atomic update (don't delete yet, will be used in reset-password)
+    await Otp.updateOne(
+      { _id: otpRecord._id },
+      { $set: { verified: true } }
+    );
 
     return NextResponse.json({
       success: true,

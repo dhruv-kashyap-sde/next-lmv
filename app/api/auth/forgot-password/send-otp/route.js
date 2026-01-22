@@ -35,7 +35,7 @@ export async function POST(request) {
     // Check if user exists
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (!existingUser) {
-      // Don't reveal if email exists or not for security
+      // not revealing if email exists or not for security
       return NextResponse.json({
         success: true,
         message: 'If an account exists with this email, you will receive a verification code',

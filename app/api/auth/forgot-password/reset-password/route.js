@@ -28,27 +28,18 @@ export async function POST(request) {
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Find verified OTP record
+    // Find verified OTP record (must be verified AND not expired)
     const otpRecord = await Otp.findOne({
       email: normalizedEmail,
       purpose: 'password-reset',
       verified: true,
+      expiresAt: { $gt: new Date() }, // Still valid
     });
 
     if (!otpRecord) {
       return NextResponse.json(
-        { success: false, error: 'Please verify your email first' },
-        { status: 400 }
-      );
-    }
-
-    // Check if OTP verification is still valid (within 5 minutes of verification)
-    const verificationWindow = 5 * 60 * 1000; // 5 minutes
-    if (otpRecord.expiresAt < new Date(Date.now() - verificationWindow)) {
-      await Otp.deleteOne({ _id: otpRecord._id });
-      return NextResponse.json(
-        { success: false, error: 'Session expired. Please start the process again.' },
-        { status: 400 }
+        { success: false, error: 'Invalid or expired verification. Please start the process again.' },
+        { status: 410 }
       );
     }
 
@@ -61,11 +52,8 @@ export async function POST(request) {
       );
     }
 
-    // Hash new password
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Update password
-    user.password = hashedPassword;
+    // Update password, pre save hook will hash it automatically
+    user.password = password;
     await user.save();
 
     // Delete OTP record
