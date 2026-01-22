@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} scrollbar ${geistMono.variable} ${bebasNeue.variable} ${raleway.variable} antialiased`}
+        className={`${geistSans.variable} bg-black scrollbar ${geistMono.variable} ${bebasNeue.variable} ${raleway.variable} antialiased`}
       >
         <NextAuthProvider>
           <AuthProvider>
