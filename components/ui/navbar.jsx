@@ -33,7 +33,12 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div className="text-2xl font-bold text-primary">
-            <Link href="/">LMV</Link>
+            <Link href="/">
+            <img
+                src="/favicon.ico"
+                alt="Loot My Vouchers Logo"
+            />
+            </Link>
           </div>
 
           {/* Mobile Auth & Menu */}

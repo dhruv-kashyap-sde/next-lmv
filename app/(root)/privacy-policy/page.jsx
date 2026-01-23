@@ -14,9 +14,15 @@ const sections = [
 ];
 
 export const metadata = {
-  title: "Privacy Policy | Loot My Vouchers",
-  description:
-    "Learn how Loot My Vouchers collects, uses, and protects your personal information. Your privacy is important to us.",
+  title: "Privacy Policy",
+  description: "Learn how Loot My Vouchers collects, uses, and protects your personal information. Your privacy is important to us.",
+  alternates: {
+    canonical: "/privacy-policy",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function PrivacyPolicyPage() {

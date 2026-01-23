@@ -7,10 +7,11 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import Faqs from "@/components/faqs";
+import { BreadcrumbSchema } from "@/components/JsonLd";
 
 export const metadata = {
-  title: "About Us - LMV | Loot My Vouchers",
-  description: "Learn about LMV - your trusted platform for genuine vouchers and discount codes. We share authentic deals from popular brands to help you save money on every purchase.",
+  title: "About Us",
+  description: "Learn about Loot My Vouchers - your trusted platform for genuine vouchers and discount codes. We share authentic deals from popular brands to help you save money on every purchase.",
   keywords: [
     "about lmv",
     "voucher platform",
@@ -22,32 +23,17 @@ export const metadata = {
     "loot my vouchers",
   ],
   openGraph: {
-    title: "About LMV - Loot My Vouchers Platform",
+    title: "About Us - Loot My Vouchers",
     description: "Discover how LMV helps you save money with verified vouchers from popular brands. 100% secure and instant access to genuine deals.",
     type: "website",
-    url: "https://lootmyvouchers.com/about",
-    siteName: "LMV - Loot My Vouchers",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "LMV - Loot My Vouchers About Us",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About LMV - Loot My Vouchers",
+    title: "About Us - Loot My Vouchers",
     description: "Learn about LMV - your trusted platform for verified vouchers and discount codes from popular brands.",
-    images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://lootmyvouchers.com/about",
-  },
-  robots: {
-    index: true,
-    follow: true,
+    canonical: "/about",
   },
 };
 

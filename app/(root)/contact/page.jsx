@@ -10,8 +10,8 @@ import {
 import ContactForm from "./contactform";
 
 export const metadata = {
-  title: "Contact Us - LMV | Get Support & Send Feedback",
-  description: "Get in touch with LMV for support, feedback, or questions about vouchers and deals. Our team is available 24/7 to help you save money with genuine discount codes.",
+  title: "Contact Us",
+  description: "Get in touch with Loot My Vouchers for support, feedback, or questions about vouchers and deals. Our team is available 24/7 to help you save money with genuine discount codes.",
   keywords: [
     "contact lmv",
     "customer support",
@@ -23,32 +23,17 @@ export const metadata = {
     "get help",
   ],
   openGraph: {
-    title: "Contact LMV - Customer Support & Feedback",
-    description: "Need help with vouchers or have feedback? Contact LMV's support team. We're here 24/7 to assist you with any questions.",
+    title: "Contact Us - Loot My Vouchers",
+    description: "Need help with vouchers or have feedback? Contact our support team. We're here 24/7 to assist you with any questions.",
     type: "website",
-    url: "https://lootmyvouchers.com/contact",
-    siteName: "LMV - Loot My Vouchers",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "LMV Contact Us",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact LMV - Get Support & Send Feedback",
-    description: "Get in touch with LMV for support, feedback, or questions. Available 24/7 to help you.",
-    images: ["/og-image.png"],
+    title: "Contact Us - Loot My Vouchers",
+    description: "Get in touch with us for support, feedback, or questions. Available 24/7 to help you.",
   },
   alternates: {
-    canonical: "https://lootmyvouchers.com/contact",
-  },
-  robots: {
-    index: true,
-    follow: true,
+    canonical: "/contact",
   },
 };
 

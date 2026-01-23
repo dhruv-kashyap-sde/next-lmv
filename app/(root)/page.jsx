@@ -3,10 +3,33 @@ import { ChevronRight, Search, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Testing from "@/components/testing";
+import { OrganizationSchema, WebsiteSchema } from "@/components/JsonLd";
+
+export const metadata = {
+  title: 'Loot My Vouchers - Claim Free Vouchers Daily | Best Deals & Promo Codes',
+  description: 'Claim free vouchers daily from top brands like Amazon, Flipkart, Swiggy & more. Get exclusive discount codes, promo codes, and special offers. Save money on every purchase!',
+  keywords: [
+    'free vouchers',
+    'discount codes',
+    'promo codes',
+    'coupon codes',
+    'daily deals',
+    'amazon vouchers',
+    'flipkart vouchers',
+    'swiggy vouchers',
+    'online shopping deals',
+    'free coupons india',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+};
 
 const page = () => {
   return (
     <>
+      <OrganizationSchema />
+      <WebsiteSchema />
       <div className="flex items-center justify-center flex-col h-[90vh] w-full">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900/50 border border-yellow-500/20 text-primary text-[12px] md:text-sm font-medium mb-4 backdrop-blur-sm">
           <Star size={14} fill="currentColor" />

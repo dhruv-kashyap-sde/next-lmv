@@ -17,9 +17,15 @@ const sections = [
 ];
 
 export const metadata = {
-  title: "Terms of Service | Loot My Vouchers",
-  description:
-    "Read the terms and conditions for using Loot My Vouchers. Understand your rights and responsibilities when using our platform.",
+  title: "Terms of Service",
+  description: "Read the terms and conditions for using Loot My Vouchers. Understand your rights and responsibilities when using our platform.",
+  alternates: {
+    canonical: "/terms-of-service",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function TermsOfServicePage() {

@@ -55,7 +55,7 @@ const VoucherSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // Track who claimed this voucher (null = not claimed yet)
+    // Track who claimed this voucher
     claimedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
