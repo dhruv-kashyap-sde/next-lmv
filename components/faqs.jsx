@@ -10,14 +10,19 @@ import {
 const Faqs = () => {
   const faqs = [
     {
+      question: "why are these vouchers free?",
+      answer:
+        "Since these vouchers are no longer needed by me, I have decided to share them for free.",
+    },
+    {
       question: "How do I get vouchers on this platform?",
       answer:
-        "Simply watch short advertisements to earn points and unlock vouchers. Each ad watched gives you access to exclusive deals from top brands.",
+        "Simply login to unlock vouchers. A valid account is necessary for you to access exclusive deals from top brands.",
     },
     {
       question: "Are these vouchers really free?",
       answer:
-        "Yes! All vouchers are completely free. You only need to watch ads to unlock them. There are no hidden charges or subscription fees.",
+        "Yes! All vouchers are completely free. You can claim one voucher per day. There are no hidden charges or subscription fees.",
     },
     {
       question: "How long are the vouchers valid?",

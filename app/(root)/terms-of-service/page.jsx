@@ -6,14 +6,15 @@ const sections = [
   { id: "user-accounts", title: "3. User Accounts" },
   { id: "rights-and-laws", title: "4. Rights & Laws" },
   { id: "intellectual-property", title: "5. Intellectual Property" },
-  { id: "user-content", title: "6. User Content" },
-  { id: "prohibited-activities", title: "7. Prohibited Activities" },
-  { id: "limitation-liability", title: "8. Limitation of Liability" },
-  { id: "indemnification", title: "9. Indemnification" },
-  { id: "termination", title: "10. Termination" },
-  { id: "governing-law", title: "11. Governing Law" },
-  { id: "changes", title: "12. Changes to Terms" },
-  { id: "contact", title: "13. Contact Us" },
+  { id: "brand-disclaimer", title: "6. Brand Disclaimer" },
+  { id: "user-content", title: "7. User Content" },
+  { id: "prohibited-activities", title: "8. Prohibited Activities" },
+  { id: "limitation-liability", title: "9. Limitation of Liability" },
+  { id: "indemnification", title: "10. Indemnification" },
+  { id: "termination", title: "11. Termination" },
+  { id: "governing-law", title: "12. Governing Law" },
+  { id: "changes", title: "13. Changes to Terms" },
+  { id: "contact", title: "14. Contact Us" },
 ];
 
 export const metadata = {
@@ -97,10 +98,6 @@ export default function TermsOfServicePage() {
                       to voucher listings and redemption features.
                     </li>
                     <li>
-                      <span className="font-medium text-foreground">Premium Features:</span> Enhanced
-                      features may be offered through paid subscriptions.
-                    </li>
-                    <li>
                       <span className="font-medium text-foreground">Third-Party Vouchers:</span> We
                       facilitate access to vouchers but are not responsible for third-party
                       merchant terms.
@@ -174,9 +171,58 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 6 */}
+              {/* Section 6 - Brand Disclaimer */}
+              <section id="brand-disclaimer" className="mb-12">
+                <h2 className="text-2xl font-bold text-foreground mb-4">6. Brand Disclaimer & Rights</h2>
+                <div className="prose prose-invert prose-zinc max-w-none">
+                  <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
+                    <p className="text-amber-200 font-medium">No Brand Affiliation</p>
+                    <p className="text-zinc-300 text-sm mt-1">
+                      Loot My Vouchers is an independent, non-profit platform with no partnership,
+                      sponsorship, or endorsement from any brand or company listed on our website.
+                    </p>
+                  </div>
+                  <p className="text-zinc-300 leading-relaxed">
+                    All brand names, logos, trademarks, and registered trademarks appearing on
+                    this website are the property of their respective owners and are used solely
+                    for identification purposes. Their presence does not imply any affiliation,
+                    sponsorship, or endorsement.
+                  </p>
+                  <p className="leading-relaxed mt-4 font-medium text-foreground">
+                    For Brand Representatives:
+                  </p>
+                  <ul className="list-disc list-inside text-zinc-300 space-y-2 ml-4 mt-2">
+                    <li>
+                      <span className="font-medium text-foreground">Removal Requests:</span> Brands
+                      have the complete right to request removal of their vouchers or brand
+                      information from our platform at any time.
+                    </li>
+                    <li>
+                      <span className="font-medium text-foreground">Sponsorship Inquiries:</span> We
+                      are open to discussions with brands interested in official partnerships or
+                      featured placements.
+                    </li>
+                    <li>
+                      <span className="font-medium text-foreground">Response Time:</span> We commit
+                      to processing all valid brand requests within 48-72 hours.
+                    </li>
+                  </ul>
+                  <p className="text-zinc-300 leading-relaxed mt-4">
+                    To submit a brand-related request, please contact us at{" "}
+                    <a
+                      href="mailto:support@lootmyvouchers.in"
+                      className="text-primary hover:text-amber-300 transition-colors"
+                    >
+                      support@lootmyvouchers.in
+                    </a>{" "}
+                    with the subject line "Brand Request - [Your Brand Name]".
+                  </p>
+                </div>
+              </section>
+
+              {/* Section 7 */}
               <section id="user-content" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">6. User Content</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">7. User Content</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     By posting content on our Website, you grant us a non-exclusive, worldwide,
@@ -194,9 +240,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 7 */}
+              {/* Section 8 */}
               <section id="prohibited-activities" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">7. Prohibited Activities</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">8. Prohibited Activities</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed mb-4">
                     You are prohibited from using the site or its content for:
@@ -214,9 +260,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 8 */}
+              {/* Section 9 */}
               <section id="limitation-liability" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">8. Limitation of Liability</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">9. Limitation of Liability</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     In no event shall Loot My Vouchers, nor any of its officers, directors, and
@@ -235,9 +281,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 9 */}
+              {/* Section 10 */}
               <section id="indemnification" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">9. Indemnification</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">10. Indemnification</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     You hereby indemnify to the fullest extent Loot My Vouchers from and against
@@ -248,9 +294,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 10 */}
+              {/* Section 11 */}
               <section id="termination" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">10. Termination</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">11. Termination</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     We may terminate or suspend your account and access to our services
@@ -266,9 +312,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 11 */}
+              {/* Section 12 */}
               <section id="governing-law" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">11. Governing Law</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">12. Governing Law</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     These Terms shall be governed and construed in accordance with the laws of
@@ -283,9 +329,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 12 */}
+              {/* Section 13 */}
               <section id="changes" className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-4">12. Changes to Terms</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">13. Changes to Terms</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed">
                     We reserve the right, at our sole discretion, to modify or replace these
@@ -300,9 +346,9 @@ export default function TermsOfServicePage() {
                 </div>
               </section>
 
-              {/* Section 13 */}
+              {/* Section 14 */}
               <section id="contact" className="mb-4">
-                <h2 className="text-2xl font-bold text-foreground mb-4">13. Contact Us</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">14. Contact Us</h2>
                 <div className="prose prose-invert prose-zinc max-w-none">
                   <p className="text-zinc-300 leading-relaxed mb-4">
                     If you have any questions about these Terms, please contact us:

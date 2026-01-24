@@ -5,9 +5,12 @@ import {
   Shield,
   Zap,
   BadgeCheck,
+  Heart,
+  AlertTriangle,
+  Building2,
 } from "lucide-react";
 import Faqs from "@/components/faqs";
-import { BreadcrumbSchema } from "@/components/JsonLd";
+import Link from "next/link";
 
 export const metadata = {
   title: "About Us",
@@ -49,7 +52,7 @@ const About = () => {
     {
       icon: Zap,
       title: "Instant Access",
-      description: "Get vouchers immediately after watching ads",
+      description: "Get vouchers immediately after signup",
       color: "text-green-500",
     },
     {
@@ -61,12 +64,12 @@ const About = () => {
   ];
 
   const voucherInfo = [
-    {
-      text: "I have ",
-      chip: { label: "Earned", color: "bg-primary text-black" },
-      text2: " these vouchers through making transactions on ",
-      chip2: { label: "Paytm", color: "bg-background text-primary" },
-    },
+    // {
+    //   text: "I have ",
+    //   chip: { label: "Earned", color: "bg-primary text-black" },
+    //   text2: " these vouchers through making transactions on ",
+    //   chip2: { label: "Paytm", color: "bg-background text-primary" },
+    // },
     {
       text: "These vouchers are ",
       chip: { label: "SHARED", color: "bg-primary text-black" },
@@ -75,12 +78,12 @@ const About = () => {
     {
       text: "I do not have any ",
       chip: { label: "partnership", color: "bg-primary text-black" },
-      text2: " with above mentioned companies",
+      text2: " with mentioned companies/brands",
     },
     {
       text: "I do not get any ",
       chip: { label: "benefits", color: "bg-primary text-black" },
-      text2: " from the above mentioned companies",
+      text2: " from mentioned companies/brands",
     },
     {
       text: "These vouchers might be beneficiary for the companies ",
@@ -140,7 +143,7 @@ const About = () => {
           <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
             <Info className="w-7 h-7 md:w-9 md:h-9 text-primary shrink-0" />
             <h3 className="font-bebas text-2xl md:text-3xl lg:text-4xl text-primary">
-              How do I get these vouchers?
+              Why we provide these vouchers for free?
             </h3>
           </div>
 
@@ -169,6 +172,86 @@ const About = () => {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Transparency Section */}
+        <div className="bg-linear-to-br from-amber-500/10 via-transparent to-purple-500/10 backdrop-blur-lg border border-white/10 rounded-2xl p-6 md:p-8 mb-12 md:mb-16 shadow-lg">
+          <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+            <Heart className="w-7 h-7 md:w-9 md:h-9 text-red-400 shrink-0" />
+            <h3 className="font-bebas text-2xl md:text-3xl lg:text-4xl text-primary">
+              Our Commitment to Transparency
+            </h3>
+          </div>
+
+          {/* Important Notice */}
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-sm md:text-base text-gray-300">
+              <span className="text-amber-200 font-medium">Important:</span> Loot My Vouchers is 
+              <span className="text-primary font-medium"> NOT sponsored by any brand</span>. We operate 
+              completely independently without any commercial partnerships or endorsements.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {/* Non-Profit Card */}
+            <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Heart className="w-5 h-5 text-red-400" />
+                <h4 className="font-bebas text-xl text-white">Non-Profit Initiative</h4>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                This is a non-profit platform created solely to help users save money. We don't 
+                charge for vouchers and don't receive payments from brands for listings.
+              </p>
+            </div>
+
+            {/* Solo Developer Card */}
+            <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="w-5 h-5 text-blue-400" />
+                <h4 className="font-bebas text-xl text-white">Solo Developer</h4>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                This entire platform is developed and maintained by a single person with a 
+                passion for helping others save money on their purchases.
+              </p>
+            </div>
+
+            {/* No Brand Affiliation Card */}
+            <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <Building2 className="w-5 h-5 text-purple-400" />
+                <h4 className="font-bebas text-xl text-white">No Brand Affiliation</h4>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                We have no partnership, sponsorship, or endorsement from any brand. All brand 
+                names used are solely for identification purposes.
+              </p>
+            </div>
+
+            {/* Brand Rights Card */}
+            <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <h4 className="font-bebas text-xl text-white">Brand Rights Respected</h4>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Brands can request removal of their vouchers at any time. We also welcome 
+                partnership inquiries from interested brands.
+              </p>
+            </div>
+          </div>
+
+          {/* Link to Disclaimer */}
+          <div className="mt-6 pt-4 border-t border-white/10 text-center">
+            <Link 
+              href="/disclaimer" 
+              className="inline-flex items-center gap-2 text-primary hover:text-amber-300 transition-colors text-sm"
+            >
+              Read our full Disclaimer for complete details →
+            </Link>
           </div>
         </div>
 

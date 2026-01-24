@@ -118,9 +118,9 @@ export default function PrivacyPolicyPage() {
                   <ul className="list-disc list-inside text-zinc-300 space-y-2 ml-4">
                     <li>To provide, maintain, and improve our services</li>
                     <li>To process transactions and send related information</li>
-                    <li>To send promotional communications (with your consent)</li>
+                    {/* <li>To send promotional communications (with your consent)</li> */}
                     <li>To respond to your comments, questions, and requests</li>
-                    <li>To monitor and analyze trends, usage, and activities</li>
+                    {/* <li>To monitor and analyze trends, usage, and activities</li> */}
                     <li>To detect, investigate, and prevent fraudulent transactions</li>
                     <li>To personalize and improve your experience</li>
                     <li>To comply with legal obligations</li>
@@ -136,22 +136,22 @@ export default function PrivacyPolicyPage() {
                     We may share your information in the following circumstances:
                   </p>
                   <ul className="list-disc list-inside text-zinc-300 space-y-2 ml-4">
-                    <li>
+                    {/* <li>
                       <span className="font-medium text-foreground">Service Providers:</span> With
                       third-party vendors who perform services on our behalf.
                     </li>
                     <li>
                       <span className="font-medium text-foreground">Business Partners:</span> With
                       voucher providers and brands to facilitate redemptions.
-                    </li>
+                    </li> */}
                     <li>
                       <span className="font-medium text-foreground">Legal Requirements:</span> When
                       required by law or to protect our rights and safety.
                     </li>
-                    <li>
+                    {/* <li>
                       <span className="font-medium text-foreground">Business Transfers:</span> In
                       connection with mergers, acquisitions, or asset sales.
-                    </li>
+                    </li> */}
                   </ul>
                   <p className="text-zinc-300 leading-relaxed mt-4">
                     We do not sell your personal information to third parties for marketing purposes.

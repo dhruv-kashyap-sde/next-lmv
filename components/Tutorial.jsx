@@ -16,7 +16,7 @@ const Tutorial = () => {
       title: "2. Claim one per day",
       description: "You can claim one ",
       chipText: "Voucher",
-      descriptionEnd: "  once every 24 hours",
+      descriptionEnd: " once every 24 hours",
     },
     {
       id: 3,

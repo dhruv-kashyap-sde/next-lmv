@@ -208,7 +208,7 @@ export default function Testing() {
             { label: "Active Users", value: "50K+" },
             { label: "Daily Vouchers", value: "2,000+" },
             { label: "Money Saved", value: "$1.2M+" },
-            { label: "Partner Brands", value: "150+" },
+            { label: "Brands", value: "150+" },
           ].map((stat, idx) => (
             <div key={idx} className="text-center">
               <div className="text-3xl md:text-4xl font-black text-primary mb-1">{stat.value}</div>
