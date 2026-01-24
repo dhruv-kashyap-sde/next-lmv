@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sheet,
   SheetClose,
@@ -16,11 +16,27 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
-const VoucherSidebar = () => {
+const VoucherSidebar = ({ 
+  brands = [], 
+  categories = [], 
+  selectedBrands = [], 
+  selectedCategories = [], 
+  selectedPriceRange = '',
+  onApplyFilters,
+  onClearFilters
+}) => {
   const [selectedTab, setSelectedTab] = useState("Brands");
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState("");
+  const [localSelectedBrands, setLocalSelectedBrands] = useState(selectedBrands);
+  const [localSelectedCategories, setLocalSelectedCategories] = useState(selectedCategories);
+  const [localSelectedPriceRange, setLocalSelectedPriceRange] = useState(selectedPriceRange);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Update local state when props change
+  useEffect(() => {
+    setLocalSelectedBrands(selectedBrands);
+    setLocalSelectedCategories(selectedCategories);
+    setLocalSelectedPriceRange(selectedPriceRange);
+  }, [selectedBrands, selectedCategories, selectedPriceRange]);
 
   const tabList = [
     { value: "Brands" },
@@ -28,55 +44,58 @@ const VoucherSidebar = () => {
     { value: "Price Range" },
   ];
 
-  const tabBrand = [
-    { name: "Amazon" },
-    { name: "eBay" },
-    { name: "Walmart" },
-    { name: "Target" },
-  ];
-
-  const tabCategories = [
-    { name: "Electronics" },
-    { name: "Fashion" },
-    { name: "Home & Garden" },
-    { name: "Health & Beauty" },
-  ];
-
   const tabPriceRange = [
-    { name: "$0 - $50" },
-    { name: "$51 - $100" },
-    { name: "$101 - $200" },
-    { name: "$201 and above" },
+    { name: "0-100", label: "Below ₹100" },
+    { name: "101-200", label: "₹101 - ₹200" },
+    { name: "201-300", label: "₹201 - ₹300" },
+    { name: "301-400", label: "₹301 - ₹400" },
+    { name: "401-500", label: "₹401 - ₹500" },
+    { name: "500+", label: "Above ₹500" },
   ];
 
-  const handleBrandToggle = (brandName) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brandName)
-        ? prev.filter((b) => b !== brandName)
-        : [...prev, brandName]
+  const handleBrandToggle = (brandId) => {
+    setLocalSelectedBrands((prev) =>
+      prev.includes(brandId)
+        ? prev.filter((b) => b !== brandId)
+        : [...prev, brandId]
     );
   };
 
-  const handleCategoryToggle = (categoryName) => {
-    setSelectedCategories((prev) =>
-      prev.includes(categoryName)
-        ? prev.filter((c) => c !== categoryName)
-        : [...prev, categoryName]
+  const handleCategoryToggle = (categoryId) => {
+    setLocalSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((c) => c !== categoryId)
+        : [...prev, categoryId]
     );
   };
 
   const clearAllFilters = () => {
-    setSelectedBrands([]);
-    setSelectedCategories([]);
-    setSelectedPriceRange("");
+    setLocalSelectedBrands([]);
+    setLocalSelectedCategories([]);
+    setLocalSelectedPriceRange("");
+    if (onClearFilters) {
+      onClearFilters();
+    }
+    setIsOpen(false);
+  };
+
+  const applyFilters = () => {
+    if (onApplyFilters) {
+      onApplyFilters({
+        brands: localSelectedBrands,
+        categories: localSelectedCategories,
+        priceRange: localSelectedPriceRange,
+      });
+    }
+    setIsOpen(false);
   };
 
   const getTotalFiltersCount = () => {
-    return selectedBrands.length + selectedCategories.length + (selectedPriceRange ? 1 : 0);
+    return localSelectedBrands.length + localSelectedCategories.length + (localSelectedPriceRange ? 1 : 0);
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="secondary">
           <FilterIcon />
@@ -95,47 +114,63 @@ const VoucherSidebar = () => {
         <Separator className="-mt-5" />
         <div className=" w-full h-screen flex">
           {/* tab content */}
-          <div className="bg-secondary w-2/3 h-full">
+          <div className="bg-secondary w-2/3 h-full overflow-y-auto">
             {selectedTab === "Brands" &&
-              tabBrand.map((brand) => (
-                <div key={brand.name} className=" items-center flex gap-4 p-4">
-                  <Checkbox
-                    id={brand.name}
-                    className="cursor-pointer"
-                    checked={selectedBrands.includes(brand.name)}
-                    onCheckedChange={() => handleBrandToggle(brand.name)}
-                  />
-                  <Label
-                    variant="ghost"
-                    htmlFor={brand.name}
-                    className="rounded-none w-full cursor-pointer"
-                  >
-                    {brand.name}
-                  </Label>
+              (brands.length > 0 ? (
+                brands
+                  .filter(brand => brand.isActive)
+                  .map((brand) => (
+                    <div key={brand._id} className=" items-center flex gap-4 p-4">
+                      <Checkbox
+                        id={brand._id}
+                        className="cursor-pointer"
+                        checked={localSelectedBrands.includes(brand._id)}
+                        onCheckedChange={() => handleBrandToggle(brand._id)}
+                      />
+                      <Label
+                        variant="ghost"
+                        htmlFor={brand._id}
+                        className="rounded-none w-full cursor-pointer"
+                      >
+                        {brand.name}
+                      </Label>
+                    </div>
+                  ))
+              ) : (
+                <div className="p-4 text-center text-muted-foreground">
+                  No brands available
                 </div>
               ))}
             {selectedTab === "Categories" &&
-              tabCategories.map((category) => (
-                <div
-                  key={category.name}
-                  className=" items-center flex gap-4 p-4"
-                >
-                  <Checkbox
-                    id={category.name}
-                    className="cursor-pointer"
-                    checked={selectedCategories.includes(category.name)}
-                    onCheckedChange={() => handleCategoryToggle(category.name)}
-                  />
-                  <Label
-                    variant="ghost"
-                    htmlFor={category.name}
-                    className="rounded-none w-full cursor-pointer"
-                  >
-                    {category.name}
-                  </Label>
+              (categories.length > 0 ? (
+                categories
+                  .filter(category => category.isActive)
+                  .map((category) => (
+                    <div
+                      key={category._id}
+                      className=" items-center flex gap-4 p-4"
+                    >
+                      <Checkbox
+                        id={category._id}
+                        className="cursor-pointer"
+                        checked={localSelectedCategories.includes(category._id)}
+                        onCheckedChange={() => handleCategoryToggle(category._id)}
+                      />
+                      <Label
+                        variant="ghost"
+                        htmlFor={category._id}
+                        className="rounded-none w-full cursor-pointer"
+                      >
+                        {category.name}
+                      </Label>
+                    </div>
+                  ))
+              ) : (
+                <div className="p-4 text-center text-muted-foreground">
+                  No categories available
                 </div>
               ))}
-            <RadioGroup value={selectedPriceRange} onValueChange={setSelectedPriceRange}>
+            <RadioGroup value={localSelectedPriceRange} onValueChange={setLocalSelectedPriceRange}>
               {selectedTab === "Price Range" &&
                 tabPriceRange.map((price) => (
                   <div
@@ -143,7 +178,7 @@ const VoucherSidebar = () => {
                     className=" items-center flex gap-4 p-4"
                   >
                     <RadioGroupItem value={price.name} id={price.name} />
-                    <Label htmlFor={price.name}>{price.name}</Label>
+                    <Label htmlFor={price.name}>{price.label}</Label>
                   </div>
                 ))}
             </RadioGroup>
@@ -163,7 +198,7 @@ const VoucherSidebar = () => {
           </div>
         </div>
         <SheetFooter>
-          <Button type="submit">Apply Filters</Button>
+          <Button type="button" onClick={applyFilters}>Apply Filters</Button>
           <SheetClose asChild>
             <Button variant="secondary" onClick={clearAllFilters}>Clear All</Button>
           </SheetClose>

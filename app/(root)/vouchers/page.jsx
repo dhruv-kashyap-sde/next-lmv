@@ -67,8 +67,8 @@ const VoucherPage = () => {
   useEffect(() => {
     fetchVouchers();
     fetchClaimStatus();
-    // fetchBrands();
-    // fetchCategories();
+    fetchBrands();
+    fetchCategories();
   }, []);
 
   // Re-filter when filters change
@@ -255,7 +255,23 @@ const VoucherPage = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <VoucherSidebar />
+          <VoucherSidebar 
+            brands={brands}
+            categories={categories}
+            selectedBrands={selectedBrand ? [selectedBrand] : []}
+            selectedCategories={selectedCategory ? [selectedCategory] : []}
+            selectedPriceRange={priceRange}
+            onApplyFilters={(filters) => {
+              setSelectedBrand(filters.brands[0] || '');
+              setSelectedCategory(filters.categories[0] || '');
+              setPriceRange(filters.priceRange || '');
+            }}
+            onClearFilters={() => {
+              setSelectedBrand('');
+              setSelectedCategory('');
+              setPriceRange('');
+            }}
+          />
         </div>
       </div>
 
