@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
   TagIcon,
+  Mail,
 } from "lucide-react";
 import {
   Tooltip,
@@ -87,6 +88,11 @@ export default function AdminDashboardLayout({ children }) {
       label: "Users",
       icon: Users,
       href: `/admin/dashboard/users`,
+    },
+    {
+      label: "Messages",
+      icon: Mail,
+      href: `/admin/dashboard/messages`,
     },
   ];
 

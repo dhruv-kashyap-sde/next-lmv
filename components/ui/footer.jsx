@@ -1,6 +1,8 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { Button } from "./button";
+import { toast } from "sonner";
 
 const Footer = () => {
   return (
@@ -12,7 +14,9 @@ const Footer = () => {
               href="/"
               className="text-2xl font-black tracking-tighter flex items-center gap-2"
             >
-              <span className=" ">LMV</span>
+              <img src="/icon.png" alt="Loot My Vouchers Logo" className="h-8 w-8" />
+              <span className="font-bebas tracking-wide text-2xl text-foreground">Loot My Vouchers</span>
+                
               <div className="w-2 h-2 rounded-full bg-yellow-500" />
             </Link>
             <p className="text-zinc-500 text-sm leading-relaxed">
@@ -30,7 +34,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link  href="#how-it-works" className="hover:text-yellow-500 transition-colors">
+                <Link  href="/#how-it-works" className="hover:text-yellow-500 transition-colors">
                   How it works
                 </Link>
               </li>
@@ -84,9 +88,12 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-yellow-500 transition-colors"
               />
-              <button className="bg-yellow-500 text-black p-2 rounded-lg hover:bg-yellow-400 transition-colors">
+              <Button 
+              
+              // className="bg-yellow-500 text-black p-2 rounded-lg hover:bg-yellow-400 transition-colors"
+              >
                 <ChevronRight size={16} />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -94,7 +101,7 @@ const Footer = () => {
         <div className="border-t border-zinc-900 pt-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-zinc-900 rounded-full flex items-center justify-center border border-zinc-800 text-xs font-bold  ">
-              N
+              LMV
             </div>
             <span className="text-zinc-600 text-sm">
               © 2024 Loot My Vouchers. All rights reserved.
@@ -102,13 +109,17 @@ const Footer = () => {
           </div>
 
           <div className="flex gap-6">
-            {["Twitter", "Instagram", "Discord"].map((social) => (
+            {
+              [{title: "Github", link: "https://github.com/dhruv-kashyap-sde/"}, {title: "LinkedIn", link: "https://www.linkedin.com/in/dhruv-kashyap-a5a006250"}, {title: "Instagram", link: "https://www.instagram.com/_dhruv.kashyap_?igsh=N213ZjRxMDNwbW02"}]
+            .map((social) => (
               <Link
-                key={social}
-                href="#"
+                key={social.title}
+                href={social.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-zinc-600 hover:  text-sm transition-colors"
               >
-                {social}
+                {social.title}
               </Link>
             ))}
           </div>
