@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
 import { NextAuthProvider } from "@/lib/NextAuthProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -132,6 +133,7 @@ export default function RootLayout({ children }) {
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </NextAuthProvider>
+        <Analytics />
       </body>
     </html>
   );
